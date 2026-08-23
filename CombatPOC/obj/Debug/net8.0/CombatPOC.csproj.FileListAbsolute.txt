@@ -34,3 +34,7 @@ C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj\Debug\net8.0\CombatPOC.pdb
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj\Debug\net8.0\CombatPOC.genruntimeconfig.cache
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj\Debug\net8.0\ref\CombatPOC.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj\Debug\net8.0\CombatPOC.sourcelink.json
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\POCLibrary.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\POCLibrary.pdb
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Content\images\logo.xnb

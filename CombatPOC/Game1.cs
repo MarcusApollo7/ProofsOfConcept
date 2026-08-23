@@ -1,19 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using POCLibrary;
 
 namespace CombatPOC;
 
-public class Game1 : Game
+public class Game1 : Core
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    // Logo START TEST
+    private Texture2D _logo;
+    // END TEST
 
-    public Game1()
+    public Game1() : base("CombatPOC", 1280, 720, false)
     {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
+        
     }
 
     protected override void Initialize()
@@ -25,9 +25,8 @@ public class Game1 : Game
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
         // TODO: use this.Content to load your game content here
+        _logo = Content.Load<Texture2D>("images/logo");
     }
 
     protected override void Update(GameTime gameTime)
@@ -42,9 +41,30 @@ public class Game1 : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.MonoGameOrange);
+        GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        // Begin the sprite batch to prepare for rendering.
+        SpriteBatch.Begin();
+
+        // Draw the logo texture
+        SpriteBatch.Draw(
+            _logo,                      // texture
+            new Vector2(                // position
+                Window.ClientBounds.Width,
+                Window.ClientBounds.Height) * 0.5f,
+            null,                       // sourceRectangle
+            Color.White,                // color
+            0,   // rotation
+            new Vector2(                // origin
+                _logo.Width,
+                _logo.Height) * 0.5f,
+            1.0f,                       // scale
+            SpriteEffects.None,         // effects
+            0.0f                        // layerDepth
+        );
+
+        // Always end the sprite batch when finished.
+        SpriteBatch.End();
 
         base.Draw(gameTime);
     }

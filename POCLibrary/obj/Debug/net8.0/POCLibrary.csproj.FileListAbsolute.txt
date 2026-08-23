@@ -1,0 +1,13 @@
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\bin\Debug\net8.0\POCLibrary.deps.json
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\bin\Debug\net8.0\POCLibrary.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\bin\Debug\net8.0\POCLibrary.pdb
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.csproj.AssemblyReference.cache
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.AssemblyInfoInputs.cache
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.AssemblyInfo.cs
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.csproj.CoreCompileInputs.cache
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.sourcelink.json
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\refint\POCLibrary.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\POCLibrary.pdb
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\POCLibrary\obj\Debug\net8.0\ref\POCLibrary.dll
