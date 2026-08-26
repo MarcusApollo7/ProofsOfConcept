@@ -54,7 +54,7 @@ public class Game1 : Core
                 Window.ClientBounds.Height) * 0.5f,
             null,                       // sourceRectangle
             Color.White,                // color
-            0,   // rotation
+            0,                          // rotation
             new Vector2(                // origin
                 _logo.Width,
                 _logo.Height) * 0.5f,
