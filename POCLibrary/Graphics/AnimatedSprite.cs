@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace unborn_queen.Graphics;
+namespace POCLibrary.Graphics;
 
 public class AnimatedSprite : Sprite
 {

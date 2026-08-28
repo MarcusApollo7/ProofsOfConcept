@@ -8,7 +8,8 @@ public class GruntActor: IActor
 {
     // Properties
     Random random = new();
-    public IAction ChooseAction(IAction[] actions)
+    // Methods
+    public IAction ChooseAction(IAction[] actions) // Just picks a random action
     {
         return actions[random.Next(0, actions.Length)];
     }

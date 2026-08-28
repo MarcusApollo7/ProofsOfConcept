@@ -1,8 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
-using MonoGameLibrary.Input;
 
-namespace unborn_queen.Input;
+namespace POCLibrary.Input;
 
 public class InputManager
 {

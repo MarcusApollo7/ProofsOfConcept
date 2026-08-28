@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using POCLibrary;
+using POCLibrary.Graphics;
+using POCLibrary.Input;
 
 namespace CombatPOC;
 
@@ -37,6 +40,11 @@ public class Game1 : Core
         // TODO: Add your update logic here
 
         base.Update(gameTime);
+    }
+
+    private void CheckKeyBoardInput()
+    {
+        
     }
 
     protected override void Draw(GameTime gameTime)

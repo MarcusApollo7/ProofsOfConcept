@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace MonoGameLibrary.Input;
+namespace POCLibrary.Input;
 
 public class MouseInfo 
 {

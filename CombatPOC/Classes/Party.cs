@@ -5,21 +5,32 @@ using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
 
+// A Party is a group of characters which take their turns at the same time
+// It holds a list of its members and tracks if everyone in the Party is downed
+
 public class Party : IEnumerable
 {
     // Properties
-    private List<ICombatant> members;
-    private bool EveryoneDowned;
+    private readonly List<ICombatant> Members;
+    private bool EveryoneDowned = false;
     // Constructors
     public Party()
     {
-        members = [];
-        EveryoneDowned = false;
+        Members = [];
+        
     }
-    // Method
+    public Party(List<ICombatant> members)
+    {
+        Members = members;
+    }
+    // Methods
     public bool IsEveryoneDowned()
     {
         return EveryoneDowned;
+    }
+    public static Party operator +(Party a, Party b)
+    {
+        return new([.. a.Members, .. b.Members]); // returns a new party with all members
     }
     // Private nested class + GetEnumerator()
     private class MyEnumerator: IEnumerator
@@ -64,6 +75,6 @@ public class Party : IEnumerable
         }  //end nested class
     public IEnumerator GetEnumerator()
     {
-        return new MyEnumerator(members);
+        return new MyEnumerator(Members);
     }
 }

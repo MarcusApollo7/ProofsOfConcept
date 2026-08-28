@@ -1,75 +1,89 @@
 using CombatPOC.Interfaces;
 using CombatPOC.Classes;
+using CombatPOC.Enum;
 
 namespace CombatPOC.Managers;
 
-public class TurnManager
+public sealed class TurnManager
 {
     // Properties
-    public Resolutions combatState = Resolutions.Undecided;
-    public TurnEnum turn;
-    public Party party;
-    public Party enemy;
-    public Party ally;
+    public ActionResolver actionResolver;
+    public Resolutions CombatState = Resolutions.Undecided;
+    public int TurnNum = 0;
+    public TurnEnum TurnTeam = TurnEnum.Enemy;
+    private static Party Party;
+    private static Party Enemy;
+    private static Party Ally;
     // Constructor
     public TurnManager(Party PlayerParty, Party Enemies, Party Allies)
     {
-        party = PlayerParty;
-        enemy = Enemies;
-        ally = Allies;
+        Party = PlayerParty;
+        Enemy = Enemies;
+        Ally = Allies;
     }
     // Methods
     public void ExectueTurn()
+    /* 
+    While the combat is ongoing, ExectueTurn() increments the TurnNum (first turn is TurnNum = 1)
+    Waits for player input, then iterates through each team and acts for each character
+    */
     {
-        while (combatState == Resolutions.Undecided)
-        {
-            if (turn == TurnEnum.Player)
+        while (CombatState == Resolutions.Undecided)
+        { // Open While Loop
+            TurnNum ++;
+            if (TurnTeam == TurnEnum.Player)
             {
                 // ADD PLAYER CONTROL
             }
-            else
+            else if (TurnTeam == TurnEnum.Enemy)
             {
-                if (turn == TurnEnum.Enemy)
+                foreach (ICombatant e in Enemy)
                 {
-                    foreach (ICombatant e in enemy)
-                    {
-                        e.GetAction();
-                    }
-                }
-                if (turn == TurnEnum.Ally)
-                {
-                    foreach (ICombatant a in ally)
-                    {
-                        a.GetAction();
-                    }
+                    IAction action = e.GetAction();
+                    Act act = action.Execute(e, TurnNum);
+                    actionResolver.ResolveAction(act);
                 }
             }
-        }
+            else if (TurnTeam == TurnEnum.Ally)
+            {
+                foreach (ICombatant a in Ally)
+                {
+                    IAction action = a.GetAction();
+                    Act act = action.Execute(a, TurnNum);
+                    actionResolver.ResolveAction(act);
+                }
+            }
+        } // Close While Loop
     }
     public void CombatEnded()
     {
-        if (party.IsEveryoneDowned() == true)
+        if (Party.IsEveryoneDowned() == true)
         {
-            combatState = Resolutions.PartyLoses;
+            CombatState = Resolutions.PartyLoses;
         }
-        if (enemy.IsEveryoneDowned() == true)
+        if (Enemy.IsEveryoneDowned() == true)
         {
-            combatState = Resolutions.PartyWins;
+            CombatState = Resolutions.PartyWins;
+        }
+    }
+    public static Party Combatants() // Gets all ICombatants as a Party
+    {
+        return Party + Ally + Enemy;
+    }
+    public void NextPartyTurn() // Cycles the TurnTeam property
+    {
+        switch (TurnTeam)
+        {
+            case TurnEnum.Player:
+                TurnTeam = TurnEnum.Enemy;
+            break;
+            case TurnEnum.Enemy:
+                TurnTeam = TurnEnum.Ally;
+            break;
+            case TurnEnum.Ally:
+                TurnTeam = TurnEnum.Player;
+            break;
         }
     }
 
-}
-
-public enum TurnEnum
-{
-    Player = 0,
-    Enemy = 1,
-    Ally = 2
-}
-
-public enum Resolutions
-{
-    PartyWins,
-    PartyLoses,
-    Undecided
 }

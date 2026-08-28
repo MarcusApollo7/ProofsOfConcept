@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace unborn_queen.Input;
+namespace POCLibrary.Input;
 
 public class KeyboardInfo
 {

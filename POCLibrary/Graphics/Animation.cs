@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace unborn_queen.Graphics;
+namespace POCLibrary.Graphics;
 
 public class Animation
 {
