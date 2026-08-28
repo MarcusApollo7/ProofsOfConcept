@@ -1,2 +1,9 @@
+CombatPOC/bin/Debug/net8.0/POCLibrary.pdb
+CombatPOC/bin/Debug/net8.0/POCLibrary.dll
+CombatPOC/bin/Debug/net8.0/CombatPOC.pdb
+CombatPOC/bin/Debug/net8.0/CombatPOC.exe
+CombatPOC/bin/Debug/net8.0/CombatPOC.dll
+/CombatPOC/obj/Debug
+/CombatPOC/bin/Debug
 *.dll
 *.pdb
