@@ -1,6 +1,7 @@
 using CombatPOC.Interfaces;
 using CombatPOC.Classes;
 using CombatPOC.Enum;
+using System.Diagnostics;
 
 namespace CombatPOC.Managers;
 
@@ -39,6 +40,7 @@ public sealed class TurnManager
             {
                 foreach (ICombatant e in Enemy)
                 {
+                    Debug.WriteLine("Enemy Turn");
                     IAction action = e.GetAction();
                     Act act = action.Execute(e, TurnNum);
                     actionResolver.ResolveAction(act);

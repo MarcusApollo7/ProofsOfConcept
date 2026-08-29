@@ -25,6 +25,7 @@ public class Game1 : Core
         // TODO: Add your initialization logic here
 
         base.Initialize();
+        
 
     }
 
@@ -36,19 +37,16 @@ public class Game1 : Core
 
     protected override void Update(GameTime gameTime)
     {
-        CheckKeyBoardInput();
-
         // TODO: Add your update logic here
 
         base.Update(gameTime);
+        
+        CheckKeyBoardInput();
     }
 
     private void CheckKeyBoardInput()
     {
-        if (Input.Keyboard.IsKeyDown(Keys.Space))
-        {
-            Debug.WriteLine("Space has been pressed");
-        }
+        
     }
 
     protected override void Draw(GameTime gameTime)

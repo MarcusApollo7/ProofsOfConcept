@@ -1,2 +1,4 @@
 *.dll
 *.pdb
+/CombatPOC/bin/Debug
+/CombatPOC/obj/Debug

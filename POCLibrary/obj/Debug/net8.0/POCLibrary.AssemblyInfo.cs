@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("POCLibrary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a30a2fb273e562bdc34f1d982b10df63a2201734")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82620cae31a673889feba4678fec3957f4da273b")]
 [assembly: System.Reflection.AssemblyProductAttribute("POCLibrary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("POCLibrary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
