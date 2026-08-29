@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,6 +25,7 @@ public class Game1 : Core
         // TODO: Add your initialization logic here
 
         base.Initialize();
+
     }
 
     protected override void LoadContent()
@@ -34,8 +36,7 @@ public class Game1 : Core
 
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+        CheckKeyBoardInput();
 
         // TODO: Add your update logic here
 
@@ -44,7 +45,10 @@ public class Game1 : Core
 
     private void CheckKeyBoardInput()
     {
-        
+        if (Input.Keyboard.IsKeyDown(Keys.Space))
+        {
+            Debug.WriteLine("Space has been pressed");
+        }
     }
 
     protected override void Draw(GameTime gameTime)

@@ -9,6 +9,8 @@ public class TileMap
     ITile[,] Tiles;
     public TileMap(int width, int height)
     {
+        Width = width;
+        Height = height;
         Tiles = new ITile[height, width];
         for (int i = 0; i < height; i++)
         {

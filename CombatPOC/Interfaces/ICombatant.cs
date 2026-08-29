@@ -18,7 +18,10 @@ public interface ICombatant
     CharacterDirection FacingDirection {get; set;}
     PositionComponent CombatantPosition {get; set;} // Where the character is on the map
     // Methods
-    IAction GetAction();
+    IAction GetAction()
+    {
+        return Actor.ChooseAction(Actions);
+    }
     void ChangeHealth(float amount)
     {
         Health += amount;

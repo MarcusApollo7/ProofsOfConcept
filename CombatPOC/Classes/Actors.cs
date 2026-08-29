@@ -4,6 +4,14 @@ using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
 
+public class PlayerActor: IActor
+{
+    public IAction ChooseAction(IAction[] actions)
+    {
+        return new BasicAttack();
+    }
+}
+
 public class GruntActor: IActor
 {
     // Properties
