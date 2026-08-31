@@ -39,7 +39,6 @@ public class Core : Game
     /// Gets a reference to the input management system.
     /// </summary>
     public static InputManager Input { get; private set; }
-
     /// <summary>
     /// Gets or Sets a value that indicates if the game should exit when the esc key on the keyboard is pressed.
     /// </summary>

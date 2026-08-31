@@ -38,3 +38,6 @@ C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\obj
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\POCLibrary.dll
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\POCLibrary.pdb
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Content\images\logo.xnb
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Content\images\atlas.xnb
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Content\images\tilemap-definition.xml
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Content\images\atlas-definition.xml

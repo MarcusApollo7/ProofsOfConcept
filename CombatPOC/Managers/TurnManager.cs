@@ -12,15 +12,21 @@ public sealed class TurnManager
     public Resolutions CombatState = Resolutions.Undecided;
     public int TurnNum = 0;
     public TurnEnum TurnTeam = TurnEnum.Enemy;
-    private static Party Party;
-    private static Party Enemy;
-    private static Party Ally;
+    private Party Party;
+    private Party Enemy;
+    private Party Ally;
     // Constructor
     public TurnManager(Party PlayerParty, Party Enemies, Party Allies)
     {
         Party = PlayerParty;
         Enemy = Enemies;
         Ally = Allies;
+    }
+    public TurnManager()
+    {
+        Party = null;
+        Enemy = null;
+        Ally = null;
     }
     // Methods
     public void ExectueTurn()
@@ -31,7 +37,6 @@ public sealed class TurnManager
     {
         while (CombatState == Resolutions.Undecided)
         { // Open While Loop
-            TurnNum ++;
             if (TurnTeam == TurnEnum.Player)
             {
                 // ADD PLAYER CONTROL
@@ -43,19 +48,31 @@ public sealed class TurnManager
                     Debug.WriteLine("Enemy Turn");
                     IAction action = e.GetAction();
                     Act act = action.Execute(e, TurnNum);
-                    actionResolver.ResolveAction(act);
+                    actionResolver.ResolveAction(act, Party + Enemy + Ally);
                 }
+                TurnNum ++;
             }
             else if (TurnTeam == TurnEnum.Ally)
             {
                 foreach (ICombatant a in Ally)
                 {
+                    Debug.WriteLine("Ally Turn");
                     IAction action = a.GetAction();
                     Act act = action.Execute(a, TurnNum);
-                    actionResolver.ResolveAction(act);
+                    actionResolver.ResolveAction(act, Party + Enemy + Ally);
                 }
+                TurnNum ++;
             }
+            CombatEnded();
         } // Close While Loop
+    }
+    public void LoadBattleState(BattleState state)
+    {
+        CombatState = state.Resolution;
+        TurnNum = state.TurnNum;
+        Party = state.Party;
+        Enemy = state.Enemy;
+        Ally = state.Ally;
     }
     public void CombatEnded()
     {
@@ -67,10 +84,6 @@ public sealed class TurnManager
         {
             CombatState = Resolutions.PartyWins;
         }
-    }
-    public static Party Combatants() // Gets all ICombatants as a Party
-    {
-        return Party + Ally + Enemy;
     }
     public void NextPartyTurn() // Cycles the TurnTeam property
     {
@@ -87,5 +100,28 @@ public sealed class TurnManager
             break;
         }
     }
-
+    public void AddParty(TurnEnum team, Party party)
+    {
+        switch (team)
+        {
+            case TurnEnum.Player:
+                if (Party == null)
+                    Party = party;
+                else
+                    return;
+            break;
+            case TurnEnum.Enemy:
+                if (Enemy == null)
+                    Party = party;
+                else
+                    return;
+            break;
+            case TurnEnum.Ally:
+                if (Party == null)
+                    Ally = party;
+                else
+                    return;
+            break;
+        }
+    }
 }

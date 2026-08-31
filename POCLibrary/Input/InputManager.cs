@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace POCLibrary.Input;
@@ -10,9 +9,7 @@ public class InputManager
     /// </summary>
     public KeyboardInfo Keyboard { get; private set; }
     public MouseInfo Mouse { get; private set; }
-
-    public bool _WaitingForInput { get; set; }
-
+    public bool _waitingForInput {get; set;}
 
     /// <summary>
     /// Creates a new InputManager.

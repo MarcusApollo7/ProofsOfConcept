@@ -12,7 +12,7 @@ public sealed class ActionResolver
     {
         _damageCalculator = damageCalculator ?? new DamageCalculator();
     }
-    public void ResolveAction(Act act)
+    public void ResolveAction(Act act, Party combatants)
     {
         foreach(ActionEffect ae in act.action.ActionEffects)
         {
@@ -21,7 +21,7 @@ public sealed class ActionResolver
                 switch (ae)
                 {
                     case ActionEffect.physical:
-                        ResolvePhysical(act.actorcombatant, position);
+                        ResolvePhysical(act.actorcombatant, position, combatants);
                     break;
                     default:
                         ResolveDefault();
@@ -30,11 +30,9 @@ public sealed class ActionResolver
             }
         }
     }
-    public void ResolvePhysical(ICombatant attacker, PositionComponent position)
+    public void ResolvePhysical(ICombatant attacker, PositionComponent position, Party combatants)
     {
-        
-        Party Combatants = TurnManager.Combatants();
-        foreach(ICombatant combatant in Combatants)
+        foreach(ICombatant combatant in combatants)
         {
             if (combatant.CombatantPosition == position)
             {
