@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Interfaces;
 
 public interface IActionPattern
 {
-    List<PositionComponent> Pattern {get; }
+    List<Vector2> Pattern {get; }
 }

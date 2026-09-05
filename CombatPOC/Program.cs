@@ -1,2 +1,2 @@
-﻿using var game = new CombatPOC.Game1();
+﻿using var game = new CombatPOC.CombatPOC();
 game.Run();

@@ -14,5 +14,5 @@ public interface IAction
     List<ActionEffect> ActionEffects {get; }
     IActionPattern ActionPattern {get; }
     // Method
-    Act Execute(ICombatant source, int turnnum);
+    Act Execute(Combatant source, int turnnum);
 }

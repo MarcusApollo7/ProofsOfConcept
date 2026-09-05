@@ -5,13 +5,16 @@ using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using POCLibrary.Interfaces;
+using POCLibrary.Input;
+using System.Diagnostics;
 
 namespace POCLibrary.Graphics;
 
 public class Tilemap
 {
     private readonly Tileset _tileset;
-    private readonly int[] _tiles;
+    private readonly Tile[,] _tiles;
 
     /// <summary>
     /// Gets the total number of rows in this tilemap.
@@ -55,7 +58,15 @@ public class Tilemap
         Columns = columns;
         Count = Columns * Rows;
         Scale = Vector2.One;
-        _tiles = new int[Count];
+        _tiles = new Tile[Rows, Columns];
+        for (int i = 0; i < Rows; i++)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                _tiles[i, j] = new();
+            }
+        }
+
     }
     /// <summary>
     /// Sets the tile at the given index in this tilemap to use the tile from
@@ -63,22 +74,9 @@ public class Tilemap
     /// </summary>
     /// <param name="index">The index of the tile in this tilemap.</param>
     /// <param name="tilesetID">The tileset id of the tile from the tileset to use.</param>
-    public void SetTile(int index, int tilesetID)
+    public void SetTileIndex(int i, int j, int tilesetIndex)
     {
-        _tiles[index] = tilesetID;
-    }
-
-    /// <summary>
-    /// Sets the tile at the given column and row in this tilemap to use the tile
-    /// from the tileset at the specified tileset id.
-    /// </summary>
-    /// <param name="column">The column of the tile in this tilemap.</param>
-    /// <param name="row">The row of the tile in this tilemap.</param>
-    /// <param name="tilesetID">The tileset id of the tile from the tileset to use.</param>
-    public void SetTile(int column, int row, int tilesetID)
-    {
-        int index = row * Columns + column;
-        SetTile(index, tilesetID);
+        _tiles[i, j].TilesetIndex = tilesetIndex;
     }
 
     /// <summary>
@@ -86,40 +84,42 @@ public class Tilemap
     /// </summary>
     /// <param name="index">The index of the tile in this tilemap.</param>
     /// <returns>The texture region of the tile from this tilemap at the specified index.</returns>
-    public TextureRegion GetTile(int index)
+    public TextureRegion GetTileTexture(int i, int j)
     {
-        return _tileset.GetTile(_tiles[index]);
+        return _tiles[i, j].Texture;
+    }
+    public void SetTileTexture(int i, int j, Tileset tileset)
+    {
+        _tiles[i, j].Texture = tileset.GetTile(_tiles[i, j].TilesetIndex);
+    }
+    public void SetTilePosition(int i, int j)
+    {
+        _tiles[i, j]._screenPosition = new(j * TileWidth * 4, i * TileHeight * 4);
+        _tiles[i, j]._spriteRectangle = new((int)(j * TileWidth * 4), (int)(i * TileHeight * 4), (int)TileWidth*4, (int)TileHeight * 4);
     }
 
-    /// <summary>
-    /// Gets the texture region of the tile from this tilemap at the specified
-    /// column and row.
-    /// </summary>
-    /// <param name="column">The column of the tile in this tilemap.</param>
-    /// <param name="row">The row of the tile in this tilemap.</param>
-    /// <returns>The texture region of the tile from this tilemap at the specified column and row.</returns>
-    public TextureRegion GetTile(int column, int row)
+    public void Update(MouseInfo mouseInfo)
     {
-        int index = row * Columns + column;
-        return GetTile(index);
+        for (int i = 0; i < Rows; i++)
+        {
+            for (int j = 0; j < Columns; j++)
+            {
+                _tiles[i, j].Update(mouseInfo);
+            }
+        }
     }
-
     /// <summary>
     /// Draws this tilemap using the given sprite batch.
     /// </summary>
     /// <param name="spriteBatch">The sprite batch used to draw this tilemap.</param>
     public void Draw(SpriteBatch spriteBatch)
     {
-        for (int i = 0; i < Count; i++)
+        for (int i = 0; i < Rows; i++)
         {
-            int tilesetIndex = _tiles[i];
-            TextureRegion tile = _tileset.GetTile(tilesetIndex);
-
-            int x = i % Columns;
-            int y = i / Columns;
-
-            Vector2 position = new Vector2(x * TileWidth, y * TileHeight);
-            tile.Draw(spriteBatch, position, Color.White, 0.0f, Vector2.Zero, Scale, SpriteEffects.None, 1.0f);
+            for (int j = 0; j < Columns; j++)
+            {
+                _tiles[i, j].Draw(spriteBatch, Scale);
+            }
         }
     }
     /// <summary>
@@ -214,7 +214,9 @@ public class Tilemap
                         int tilesetIndex = int.Parse(columns[column]);
 
                         // Add that region to the tilemap at the row and column location
-                        tilemap.SetTile(column, row, tilesetIndex);
+                        tilemap.SetTileIndex(row, column, tilesetIndex);
+                        tilemap.SetTileTexture(row, column, tileset);
+                        tilemap.SetTilePosition(row, column);
                     }
                 }
 
@@ -222,6 +224,9 @@ public class Tilemap
             }
         }
     }
-
+    public void InitializeTiles()
+    {
+        
+    }
 
 }

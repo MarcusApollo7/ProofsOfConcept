@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
 
@@ -11,7 +10,7 @@ namespace CombatPOC.Classes;
 public class Party : IEnumerable
 {
     // Properties
-    private readonly List<ICombatant> Members;
+    private readonly List<Combatant> Members;
     private bool EveryoneDowned = false;
     // Constructors
     public Party()
@@ -19,7 +18,7 @@ public class Party : IEnumerable
         Members = [];
         
     }
-    public Party(List<ICombatant> members)
+    public Party(List<Combatant> members)
     {
         Members = members;
     }
@@ -28,6 +27,17 @@ public class Party : IEnumerable
     {
         return EveryoneDowned;
     }
+    public Combatant GetCombatantByName(string name)
+    {
+        foreach(Combatant combatant in Members)
+        {
+            if (combatant.Name == name)
+            {
+                return combatant;
+            }
+        }
+        return null;
+    }
     public static Party operator +(Party a, Party b)
     {
         return new([.. a.Members, .. b.Members]); // returns a new party with all members
@@ -35,10 +45,10 @@ public class Party : IEnumerable
     // Private nested class + GetEnumerator()
     private class MyEnumerator: IEnumerator
     {
-        public List<ICombatant> members;
+        public List<Combatant> members;
         int position = -1;
 
-        public MyEnumerator(List<ICombatant> list)
+        public MyEnumerator(List<Combatant> list)
             {
                 members=list;
             }

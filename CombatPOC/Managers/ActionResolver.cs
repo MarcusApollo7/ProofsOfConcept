@@ -2,6 +2,7 @@ using System;
 using CombatPOC.Classes;
 using CombatPOC.Enum;
 using CombatPOC.Interfaces;
+using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Managers;
 
@@ -16,7 +17,7 @@ public sealed class ActionResolver
     {
         foreach(ActionEffect ae in act.action.ActionEffects)
         {
-            foreach(PositionComponent position in act.PositionsActedUpon)
+            foreach(Vector2 position in act.PositionsActedUpon)
             {
                 switch (ae)
                 {
@@ -30,14 +31,14 @@ public sealed class ActionResolver
             }
         }
     }
-    public void ResolvePhysical(ICombatant attacker, PositionComponent position, Party combatants)
+    public void ResolvePhysical(Combatant attacker, Vector2 position, Party combatants)
     {
-        foreach(ICombatant combatant in combatants)
+        foreach(Combatant combatant in combatants)
         {
-            if (combatant.CombatantPosition == position)
+            if (combatant.CheckSamePosition(position))
             {
                 float dmg = _damageCalculator.CalculateDamage(attacker, combatant);
-                combatant.ChangeHealth(dmg); 
+                combatant.ChangeCurHealth(-dmg); 
             }
         }
     }

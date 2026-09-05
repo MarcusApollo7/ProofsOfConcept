@@ -5,13 +5,14 @@ using System.Diagnostics;
 
 namespace CombatPOC.Managers;
 
+// TurnManger handles all the logic of the Combat System
 public sealed class TurnManager
 {
     // Properties
     public ActionResolver actionResolver;
     public Resolutions CombatState = Resolutions.Undecided;
     public int TurnNum = 0;
-    public TurnEnum TurnTeam = TurnEnum.Enemy;
+    public TeamEnum TurnTeam = TeamEnum.Enemy;
     private Party Party;
     private Party Enemy;
     private Party Ally;
@@ -22,28 +23,21 @@ public sealed class TurnManager
         Enemy = Enemies;
         Ally = Allies;
     }
-    public TurnManager()
-    {
-        Party = null;
-        Enemy = null;
-        Ally = null;
-    }
     // Methods
     public void ExectueTurn()
     /* 
     While the combat is ongoing, ExectueTurn() increments the TurnNum (first turn is TurnNum = 1)
-    Waits for player input, then iterates through each team and acts for each character
     */
     {
         while (CombatState == Resolutions.Undecided)
         { // Open While Loop
-            if (TurnTeam == TurnEnum.Player)
+            if (TurnTeam == TeamEnum.Player)
             {
                 // ADD PLAYER CONTROL
             }
-            else if (TurnTeam == TurnEnum.Enemy)
+            else if (TurnTeam == TeamEnum.Enemy)
             {
-                foreach (ICombatant e in Enemy)
+                foreach (Combatant e in Enemy)
                 {
                     Debug.WriteLine("Enemy Turn");
                     IAction action = e.GetAction();
@@ -52,9 +46,9 @@ public sealed class TurnManager
                 }
                 TurnNum ++;
             }
-            else if (TurnTeam == TurnEnum.Ally)
+            else if (TurnTeam == TeamEnum.Ally)
             {
-                foreach (ICombatant a in Ally)
+                foreach (Combatant a in Ally)
                 {
                     Debug.WriteLine("Ally Turn");
                     IAction action = a.GetAction();
@@ -89,34 +83,34 @@ public sealed class TurnManager
     {
         switch (TurnTeam)
         {
-            case TurnEnum.Player:
-                TurnTeam = TurnEnum.Enemy;
+            case TeamEnum.Player:
+                TurnTeam = TeamEnum.Enemy;
             break;
-            case TurnEnum.Enemy:
-                TurnTeam = TurnEnum.Ally;
+            case TeamEnum.Enemy:
+                TurnTeam = TeamEnum.Ally;
             break;
-            case TurnEnum.Ally:
-                TurnTeam = TurnEnum.Player;
+            case TeamEnum.Ally:
+                TurnTeam = TeamEnum.Player;
             break;
         }
     }
-    public void AddParty(TurnEnum team, Party party)
+    public void AddParty(TeamEnum team, Party party)
     {
         switch (team)
         {
-            case TurnEnum.Player:
+            case TeamEnum.Player:
                 if (Party == null)
                     Party = party;
                 else
                     return;
             break;
-            case TurnEnum.Enemy:
+            case TeamEnum.Enemy:
                 if (Enemy == null)
                     Party = party;
                 else
                     return;
             break;
-            case TurnEnum.Ally:
+            case TeamEnum.Ally:
                 if (Party == null)
                     Ally = party;
                 else

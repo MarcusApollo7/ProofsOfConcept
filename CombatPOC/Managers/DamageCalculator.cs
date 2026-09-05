@@ -1,14 +1,14 @@
 using System;
-using CombatPOC.Interfaces;
+using CombatPOC.Classes;
 
 namespace CombatPOC.Managers;
 
 public class DamageCalculator
 {
-    public float CalculateDamage(ICombatant attacker, ICombatant defender)
+    public float CalculateDamage(Combatant attacker, Combatant defender)
     {
-        float attackDmg = attacker.Attack;
-        float defendedDmg = defender.Defense;
+        float attackDmg = attacker.Attack.Value;
+        float defendedDmg = defender.Defense.Value;
         float dmgDealt = Math.Max(0, attackDmg - defendedDmg);
         return dmgDealt;
     }

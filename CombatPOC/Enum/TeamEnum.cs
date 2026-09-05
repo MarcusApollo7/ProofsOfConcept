@@ -1,4 +1,4 @@
-public enum TurnEnum
+public enum TeamEnum
 {
     Player,
     Enemy,

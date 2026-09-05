@@ -4,11 +4,14 @@ using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
 
+
 public class PlayerActor: IActor
 {
+    // Properties
+    Random random = new();
     public IAction ChooseAction(IAction[] actions)
     {
-        return new BasicAttack();
+        return actions[random.Next(0, actions.Length)];
     }
 }
 

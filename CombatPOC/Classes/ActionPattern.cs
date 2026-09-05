@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
@@ -6,7 +7,7 @@ namespace CombatPOC.Classes;
 public class BasicActionPattern: IActionPattern
 {
     // Properties
-    public List<PositionComponent> Pattern {get; }
+    public List<Vector2> Pattern {get; }
     // Constructor
     public BasicActionPattern()
     {
