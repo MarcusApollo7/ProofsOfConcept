@@ -1,6 +1,6 @@
 using CombatPOC.Interfaces;
 using CombatPOC.Classes;
-using CombatPOC.Enum;
+using CombatPOC.Entities;
 using System.Diagnostics;
 
 namespace CombatPOC.Managers;

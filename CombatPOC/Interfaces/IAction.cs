@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CombatPOC.Classes;
 using CombatPOC.Enum;
+using CombatPOC.Entities;
 
 namespace CombatPOC.Interfaces;
 

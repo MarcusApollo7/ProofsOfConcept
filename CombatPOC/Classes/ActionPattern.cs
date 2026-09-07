@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using CombatPOC.Interfaces;
+using CombatPOC.Logic;
 
 namespace CombatPOC.Classes;
 
 public class BasicActionPattern: IActionPattern
 {
     // Properties
-    public List<Vector2> Pattern {get; }
+    public List<TileLocation> Pattern {get; }
     // Constructor
     public BasicActionPattern()
     {

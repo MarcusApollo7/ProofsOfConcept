@@ -1,23 +1,23 @@
 using System;
 using CombatPOC.Classes;
 using CombatPOC.Enum;
-using CombatPOC.Interfaces;
+using CombatPOC.Entities;
+using CombatPOC.Logic;
 using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Managers;
 
 public sealed class ActionResolver
 {
-    private DamageCalculator _damageCalculator;
     public ActionResolver(DamageCalculator damageCalculator = null)
     {
-        _damageCalculator = damageCalculator ?? new DamageCalculator();
+        
     }
     public void ResolveAction(Act act, Party combatants)
     {
         foreach(ActionEffect ae in act.action.ActionEffects)
         {
-            foreach(Vector2 position in act.PositionsActedUpon)
+            foreach(TileLocation position in act.ReturnPositions())
             {
                 switch (ae)
                 {
@@ -31,13 +31,13 @@ public sealed class ActionResolver
             }
         }
     }
-    public void ResolvePhysical(Combatant attacker, Vector2 position, Party combatants)
+    public void ResolvePhysical(Combatant attacker, TileLocation position, Party combatants)
     {
         foreach(Combatant combatant in combatants)
         {
-            if (combatant.CheckSamePosition(position))
+            if (combatant._stats.CheckSamePosition(position))
             {
-                float dmg = _damageCalculator.CalculateDamage(attacker, combatant);
+                float dmg = DamageCalculator.CalculateDamage(attacker, combatant);
                 combatant.ChangeCurHealth(-dmg); 
             }
         }

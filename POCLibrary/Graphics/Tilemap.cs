@@ -95,7 +95,7 @@ public class Tilemap
     public void SetTilePosition(int i, int j)
     {
         _tiles[i, j]._screenPosition = new(j * TileWidth * 4, i * TileHeight * 4);
-        _tiles[i, j]._spriteRectangle = new((int)(j * TileWidth * 4), (int)(i * TileHeight * 4), (int)TileWidth*4, (int)TileHeight * 4);
+        _tiles[i, j]._spriteRectangle = new((int)(j * TileWidth * 4), (int)(i * TileHeight * 4), (int)TileWidth*4, (int)TileHeight * 4); 
     }
 
     public void Update(MouseInfo mouseInfo)
@@ -224,9 +224,4 @@ public class Tilemap
             }
         }
     }
-    public void InitializeTiles()
-    {
-        
-    }
-
 }

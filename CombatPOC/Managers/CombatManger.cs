@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using CombatPOC.Classes;
-using CombatPOC.Interfaces;
+using CombatPOC.Entities;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 using POCLibrary.Graphics;
 using POCLibrary.Input;
 using static POCLibrary.Core;
@@ -17,6 +17,7 @@ public class CombatManager
     private Party _combatants;
     private Combatant _selectedCombatant;
     private Tilemap _tileMap;
+    private List<Act> _acts;
     public CombatManager(List<Combatant> combatants, Tilemap tilemap)
     {
         _combatants = new(combatants);
@@ -25,7 +26,7 @@ public class CombatManager
         List<Combatant> ally = [];
         foreach(Combatant combatant in combatants)
         {
-            switch (combatant._team)
+            switch (combatant._stats._team)
             {
                 case TeamEnum.Player:
                     playerparty.Add(combatant);
@@ -41,6 +42,7 @@ public class CombatManager
         _turnManager = new(new(playerparty), new(enemy), new(ally));
         _UIManager = new();
         _tileMap = tilemap;
+        _acts = [];
     }
 
     public void JumpCombatant(Combatant combatant, Vector2 newposition)
@@ -51,42 +53,31 @@ public class CombatManager
     {
         foreach(Combatant combatant in _combatants)
         {
-            combatant.OnClick(Input.Mouse);
-            if (combatant.Selected == true)
+            if (combatant._sprite.Selected == true)
             {
-                _selectedCombatant = combatant;
-                _selectedCombatant?.JumpToNewPosition(new(Input.Mouse.X, Input.Mouse.Y));
+                _selectedCombatant = combatant;           
+                break;
             }
-                
-            break;
         }
     }
     public void CheckForPlayerInput()
     {
         if (_selectedCombatant != null)
         {
-            if (Input.Keyboard.WasKeyJustPressed(Keys.W))
+            /* if (Input.Keyboard.WasKeyJustPressed(Keys.A))
             {
-                _selectedCombatant.Move(Enum.CharacterDirection.Up);
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.D))
-            {
-                _selectedCombatant.Move(Enum.CharacterDirection.Right);
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.S))
-            {
-                _selectedCombatant.Move(Enum.CharacterDirection.Down);
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.A))
-            {
-                _selectedCombatant.Move(Enum.CharacterDirection.Left);
-            }            
+                Act shown_action = _selectedCombatant.ShowAction(0, 0);
+                if (!_acts.Contains(shown_action))
+                {
+                    _acts.Add(shown_action);
+                }
+            }   */      
         }
-        if (Input.Keyboard.WasKeyJustPressed(Keys.Space) && _selectedCombatant != null)
+        if (Input.Mouse.WasButtonJustReleased(MouseButton.Left) && _selectedCombatant != null)
         {
             Vector2 mousePosition = new(Input.Mouse.CurrentState.Position.X, Input.Mouse.CurrentState.Position.Y);
             _selectedCombatant.JumpToNewPosition(mousePosition);
-            _selectedCombatant.ClearSelect();
+            _selectedCombatant._sprite.ClearSelect();
             _selectedCombatant = null;
         }
     }
@@ -97,8 +88,19 @@ public class CombatManager
         _tileMap.Update(Input.Mouse);
         foreach(Combatant combatant in _combatants)
         {
-            combatant.ClearHover();
             combatant.Update(gameTime, Input.Mouse);
+        }
+    }
+    public void Draw(SpriteBatch spriteBatch, Texture2D _actTexture)
+    {
+        _tileMap.Draw(spriteBatch);
+        foreach(Combatant combatant in _combatants)
+        {
+            combatant.Draw(spriteBatch);
+        }
+        foreach(Act act in _acts)
+        {
+            act.Draw(spriteBatch, _actTexture);
         }
     }
 

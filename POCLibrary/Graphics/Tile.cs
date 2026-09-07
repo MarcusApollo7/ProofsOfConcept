@@ -9,15 +9,9 @@ public class Tile: IHoverable
 {
     public int TilesetIndex;
     public TextureRegion Texture;
-    public bool Walkable; // determines if tile can be walked over
-    public bool Standable; // determines if tile can be stood on
     public Vector2 _screenPosition {get; set;}
     public Rectangle _spriteRectangle {get; set;}
     public bool Hovered {get; set;}
-    public Tile()
-    {
-
-    }
 
     public void OnHover(MouseInfo mouseInfo)
     {
