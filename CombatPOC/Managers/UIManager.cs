@@ -6,7 +6,5 @@ namespace CombatPOC.Managers;
 
 public class UIManager
 {
-    TextureAtlas _atlas;
-    Vector2 _scale;
-    List<string> _atlasNames;
+    
 }

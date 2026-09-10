@@ -17,7 +17,7 @@ public sealed class ActionResolver
     {
         foreach(ActionEffect ae in act.action.ActionEffects)
         {
-            foreach(TileLocation position in act.ReturnPositions())
+            foreach(TileLocation position in act.tilesActedUpon)
             {
                 switch (ae)
                 {

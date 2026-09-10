@@ -5,21 +5,22 @@ using CombatPOC.Interfaces;
 using POCLibrary.Interfaces;
 using POCLibrary;
 using POCLibrary.Input;
+using CombatPOC.Entities;
 
 namespace CombatPOC.Classes;
 
-public class CombatantSprite: IClickable, IHoverable
+public class CombatantSprite(string spritename, Vector2 spritePosition): IClickable, IHoverable
 {
+    public string _spriteName = spritename;
     public AnimatedSprite _animatedSprite;
-    public Vector2 _screenPosition; // in pixels
+    public Vector2 _screenPosition = spritePosition; // in pixels
     public Rectangle _spriteRectangle {get; set; }
     public bool Selected {get; set; } = false;
-    public Color _selectedColor;
+    public Color _selectedColor = Color.Green;
     public bool Hovered {get; set; } = false;
     // Methods
-    public void Initialize(Vector2 initalPosition)
+    public void Initialize()
     {
-        _screenPosition = initalPosition;
         _spriteRectangle = new((int)_screenPosition.X, (int)_screenPosition.Y, Helper._tileDim, Helper._tileDim);
     }
     public void LoadContent(TextureAtlas atlas, string spritename, Vector2 scale)
@@ -51,7 +52,7 @@ public class CombatantSprite: IClickable, IHoverable
         if(_spriteRectangle.Contains(mouseInfo.CurrentState.Position))
         {
             Hovered = true;
-            _animatedSprite.Color = Color.Green;
+            _animatedSprite.Color = _selectedColor;
         }
         else
         {

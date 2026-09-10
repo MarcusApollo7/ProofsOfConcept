@@ -28,17 +28,6 @@ public class Party : IEnumerable
     {
         return EveryoneDowned;
     }
-    public Combatant GetCombatantByName(string name)
-    {
-        foreach(Combatant combatant in Members)
-        {
-            if (combatant.Name == name)
-            {
-                return combatant;
-            }
-        }
-        return null;
-    }
     public static Party operator +(Party a, Party b)
     {
         return new([.. a.Members, .. b.Members]); // returns a new party with all members

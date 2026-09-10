@@ -1,3 +1,5 @@
+using CombatPOC.Logic;
+
 namespace CombatPOC.Paths;
 
 public record Location(int x, int y, bool walkable)
@@ -9,4 +11,8 @@ public record Location(int x, int y, bool walkable)
     public int G;
     public int H;
     public Location Parent;
+    public TileLocation ToTileLocation()
+    {
+        return new(X, Y);
+    }
 }

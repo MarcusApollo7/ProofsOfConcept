@@ -12,7 +12,6 @@ public class Tile: IHoverable
     public Vector2 _screenPosition {get; set;}
     public Rectangle _spriteRectangle {get; set;}
     public bool Hovered {get; set;}
-
     public void OnHover(MouseInfo mouseInfo)
     {
         if (_spriteRectangle.Contains(mouseInfo.CurrentState.Position))

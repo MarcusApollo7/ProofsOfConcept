@@ -16,14 +16,9 @@ namespace CombatPOC;
 
 public class CombatPOC : Core
 {
-    private Combatant _hero = new Hero("Test1");
-    private Combatant _hero2 = new Hero("Test2");
-    private Tilemap _tileMap;
-    private Rectangle _roomBounds;
-    private Vector2 _scale = new(4.0f, 4.0f);
-    private Vector2 _heroPosition;
-    private Texture2D _solidRectangle; 
-    private CombatManager _combatManager;
+    public Texture2D _whiteRectangle;
+    public static Vector2 _scale = new(4.0f, 4.0f);
+    private CombatManager _combatManager = new();
     public CombatPOC() : base("CombatPOC", 1280, 720, false)
     {
         
@@ -31,41 +26,20 @@ public class CombatPOC : Core
 
     protected override void Initialize()
     {
+        // Init Base Class
         base.Initialize();
-        AStar aStar = new(_tileMap);
-        aStar.Initialize();
-        List<Location> path = aStar.FindPath();
-        foreach(Location location in path)
-        {
-            Debug.WriteLine($"Tile: {location.X}, {location.Y}");
-        }
-        // TODO: Add your initialization logic here
-        List<Combatant> combatants = [_hero, _hero2];
-        _combatManager = new(combatants, _tileMap);
-        Rectangle screenBounds = GraphicsDevice.PresentationParameters.Bounds;
-       _roomBounds = new Rectangle(
-            (int)_tileMap.TileWidth,
-            (int)_tileMap.TileHeight,
-            screenBounds.Width - (int)_tileMap.TileWidth * 2,
-            screenBounds.Height - (int)_tileMap.TileHeight * 2
-        );
-        // Initial slime position will be the center tile of the tile map.
-        int centerRow = _tileMap.Rows / 2;
-        int centerColumn = _tileMap.Columns / 2;
-
-        _heroPosition = new Vector2(centerColumn * _tileMap.TileWidth, centerRow * _tileMap.TileHeight);
-        _hero.Initialize(_heroPosition);
-        _hero2.Initialize(new(0, 0));
+        _whiteRectangle = new Texture2D(GraphicsDevice, 1, 1);
+        _whiteRectangle.SetData([Color.White]);
+        // Initial slime position will be the center tile of the tile map
+        
     }
     protected override void LoadContent()
     {
-        base.LoadContent();
-        // Create the texture atlas from the XML configuration file
-        TextureAtlas atlas = TextureAtlas.FromFile(Content, "images/atlas-definition.xml");
-        _hero.LoadSpriteFromAtlas(atlas, "slime-animation", _scale);
-        _hero2.LoadSpriteFromAtlas(atlas, "bat-animation", _scale);
-        _tileMap = Tilemap.FromFile(Content, "images/tilemap-definition.xml");
-        _tileMap.Scale = _scale;
+
+        // Init combatManger
+        _combatManager.Initialize();
+        _combatManager.LoadContent();
+        
 
     }
     protected override void Update(GameTime gameTime)
@@ -77,17 +51,15 @@ public class CombatPOC : Core
 
     protected override void Draw(GameTime gameTime)
     {
+        base.Draw(gameTime);
         GraphicsDevice.Clear(Color.CornflowerBlue);
-        _solidRectangle = new Texture2D(GraphicsDevice, 1, 1);
-        _solidRectangle.SetData([Color.White]);
         // Begin the sprite batch to prepare for rendering.
         SpriteBatch.Begin();
 
-        _combatManager.Draw(SpriteBatch, _solidRectangle);
+        _combatManager.Draw(SpriteBatch, _whiteRectangle);
 
         // Always end the sprite batch when finished.
         SpriteBatch.End();
-        base.Draw(gameTime);
     }
 
     

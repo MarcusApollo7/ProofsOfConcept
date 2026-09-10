@@ -4,24 +4,39 @@ using CombatPOC.Interfaces;
 
 namespace CombatPOC.Classes;
 
-
-public class PlayerActor: IActor
+public abstract class CombatantActorRoutine(int parentId): IActorRotuine
 {
-    // Properties
-    Random random = new();
-    public IAction ChooseAction(IAction[] actions)
-    {
-        return actions[random.Next(0, actions.Length)];
-    }
+    public int ParentID {get; } = parentId;
+    public abstract IAction[] Actions {get; }
+    public abstract IAction ChooseAction();
 }
 
-public class GruntActor: IActor
+public class PlayerActor:  CombatantActorRoutine
 {
-    // Properties
-    Random random = new();
-    // Methods
-    public IAction ChooseAction(IAction[] actions) // Just picks a random action
+    public override IAction[] Actions {get; } = [new DiagonalAttack()];
+    public PlayerActor(int parentId) : base(parentId)
     {
-        return actions[random.Next(0, actions.Length)];
+        _selectedActionIndex = 0;
+    }
+    // Properties
+    int _selectedActionIndex;
+    public override IAction ChooseAction()
+    {
+        return Actions[_selectedActionIndex];    
+    }
+}
+public class GruntActor: CombatantActorRoutine
+{
+    public override IAction[] Actions {get; } = [new BasicAttack()];
+    public GruntActor(int parentId) : base(parentId)
+    {
+        
+    }
+    // Properties
+    readonly Random random = new();
+    // Methods
+    public override IAction ChooseAction() // Just picks a random action
+    {
+        return Actions[random.Next(0, Actions.Length)];
     }
 }

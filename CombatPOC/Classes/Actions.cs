@@ -6,24 +6,45 @@ using CombatPOC.Entities;
 using CombatPOC.Logic;
 using Microsoft.Xna.Framework;
 using POCLibrary;
+using CombatPOC.Managers;
 
 namespace CombatPOC.Classes;
 
-public class BasicAttack: IAction
+public abstract class Attack: IAction
 {
-    public string ActionName {get; }
-    public float BaseStrength {get; set;}
-    public IActionPattern ActionPattern {get; } = new BasicActionPattern();
-    public List<ActionEffect> ActionEffects {get; } = [ActionEffect.physical];
-    public Act Execute(Combatant source, int turnnum)
+    public abstract string ActionName {get; }
+    public float BaseStrength {get; set;} = 10;
+    public abstract IActionPattern ActionPattern {get; }
+    public abstract List<ActionEffect> ActionEffects {get; }
+    public Act Execute(int CombatantID)
     {
+        Combatant source = (Combatant)ActorManager.GetActor(CombatantID);
         List<TileLocation> positionsactedupon = [];
-        TileLocation positionTile = new(source._stats._tileLocation.X, source._stats._tileLocation.Y);
-        foreach (TileLocation position in ActionPattern.Pattern)
+        TileLocation positionTile = source._stats._tileLocation;
+        foreach (TileLocation position in ActionPattern.RotatePattern(source._stats.characterDirection))
         {
+            TileLocation newPos = positionTile+position;
             positionsactedupon.Add(positionTile+position);
         }
-        return new(this, source, positionsactedupon, turnnum, new((int)positionsactedupon[0].X, (int)positionsactedupon[0].Y, Helper._tileDim, Helper._tileDim));
+        return new(this, source, positionsactedupon, TurnManager.TurnNum);
+    }
+}
+
+public abstract class DirectAttack: Attack, IAction
+{
+    
+}
+
+public class BasicAttack: DirectAttack
+{
+    public override string ActionName {get; } = "Basic Attack";
+    public override List<ActionEffect> ActionEffects {get; } = [ActionEffect.physical];
+    public override IActionPattern ActionPattern {get; } = new BasicActionPattern();
     }
 
+public class DiagonalAttack: DirectAttack
+{
+    public override string ActionName {get; } = "Diagonal Attack";
+    public override List<ActionEffect> ActionEffects {get; } = [ActionEffect.physical];
+    public override IActionPattern ActionPattern {get; } = new DiagonalActionPattern();
 }

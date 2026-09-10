@@ -13,7 +13,7 @@ public interface IAction
     string ActionName {get; }
     float BaseStrength {get; set; }
     List<ActionEffect> ActionEffects {get; }
-    IActionPattern ActionPattern {get; }
     // Method
-    Act Execute(Combatant source, int turnnum);
+    Act Execute(int EntityID);
+    
 }

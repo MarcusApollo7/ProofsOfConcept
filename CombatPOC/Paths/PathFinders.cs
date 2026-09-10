@@ -2,25 +2,27 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using POCLibrary.Graphics;
+using CombatPOC.Entities;
 using System.Diagnostics;
+using CombatPOC.Managers;
+using CombatPOC.Classes;
 
 namespace CombatPOC.Paths;
 
-public class AStar(Tilemap tilemap)
+public class AStar
 {
-    public readonly Map _map = new(tilemap);
-    Location current = null;
-    Location start = new(0, 0, true);
-    Location target = new(2, 2, true);
-    List<Location> open = [];
-    List<Location> closed = [];
-    int g = 0;
-    public void Initialize()
+    public static Map _map;
+    static Location current = null;
+    static List<Location> open = [];
+    static List<Location> closed = [];
+    static int g = 0;
+    public void Initialize(Tilemap tilemap)
     {
-        open.Add(start);
+        _map = new(tilemap);
     }
-    public List<Location> FindPath()
+    public static List<Location> FindPath(Location Start, Location target)
     {
+        open.Add(Start);
         while (open.Count > 0)
         {
             var lowest = open.Min(l => l.F);
@@ -41,7 +43,6 @@ public class AStar(Tilemap tilemap)
                     continue;
                 else if (!open.Contains(tile))
                 {
-                    Debug.WriteLine("New Tile!");
                     tile.G = g;
                     tile.H = ComputeHScore(tile.X, tile.Y, target.X, target.Y);
                     tile.F = tile.H + tile.G;
@@ -58,7 +59,7 @@ public class AStar(Tilemap tilemap)
     {
         return Math.Abs(targetX - x) + Math.Abs(targetY - y);
     }
-    public List<Location> GetAdjacentTiles(int x, int y)
+    public static List<Location> GetAdjacentTiles(int x, int y)
     {
         
         return
@@ -68,5 +69,16 @@ public class AStar(Tilemap tilemap)
                 _map.GetLocation(x - 1, y),
                 _map.GetLocation(x + 1, y)
             ];
+    }
+    public static void ResetPathFinder()
+    {
+        current = null;
+        open = [];
+        closed = [];
+        g = 0;
+    }
+    public static void ResetMap()
+    {
+        
     }
 }
