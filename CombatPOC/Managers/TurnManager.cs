@@ -25,20 +25,19 @@ public sealed class TurnManager
     
     */
     {
-        while (CombatState == Resolutions.Undecided)
-        { // Open While Loop
-            if (TurnTeam == TeamEnum.Enemy)
+        if (TurnTeam == TeamEnum.Enemy)
+        {
+            foreach(Combatant combatant in CombatManager._combatants)
             {
-                foreach(Combatant combatant in CombatManager._combatants)
+                if (combatant._stats._team == TeamEnum.Enemy)
                 {
-                    if (combatant._stats._team == TeamEnum.Enemy)
-                    {
-                        Combatant target = combatant.FindTarget();
-                        combatant.GetMovesFromPathfinder(target);
-                    }
+                    Combatant target = combatant.FindTarget();
+                    UIManager._movementManger.SetObjectPath(combatant, combatant.GetMovesFromPathfinder(target));
                 }
             }
-        } // Close While Loop
+            NextPartyTurn();
+        }
+        
     }
     public void NextPartyTurn() // Cycles the TurnTeam property
     {
@@ -48,7 +47,7 @@ public sealed class TurnManager
                 TurnTeam = TeamEnum.Enemy;
             break;
             case TeamEnum.Enemy:
-                TurnTeam = TeamEnum.Ally;
+                TurnTeam = TeamEnum.Player;
             break;
             case TeamEnum.Ally:
                 TurnTeam = TeamEnum.Player;

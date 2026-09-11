@@ -6,11 +6,13 @@ using POCLibrary.Interfaces;
 using POCLibrary;
 using POCLibrary.Input;
 using CombatPOC.Entities;
+using System.Diagnostics;
 
 namespace CombatPOC.Classes;
 
-public class CombatantSprite(string spritename, Vector2 spritePosition): IClickable, IHoverable
+public class CombatantSprite(string spritename, Vector2 spritePosition): IClickable, IHoverable, IRenderable
 {
+    public string Name {get => _spriteName;}
     public string _spriteName = spritename;
     public AnimatedSprite _animatedSprite;
     public Vector2 _screenPosition = spritePosition; // in pixels
@@ -28,11 +30,14 @@ public class CombatantSprite(string spritename, Vector2 spritePosition): IClicka
         _animatedSprite = atlas.CreateAnimatedSprite(spritename);
         _animatedSprite.Scale = scale;
     }
-    public void Update(GameTime gameTime, MouseInfo mouseInfo)
+    public void Update(GameTime gameTime)
+    {
+        _animatedSprite.Update(gameTime);
+    }
+    public void CheckClickHover(MouseInfo mouseInfo)
     {
         OnHover(mouseInfo);
         OnClick(mouseInfo);
-        _animatedSprite.Update(gameTime);
     }
     public void Draw(SpriteBatch spriteBatch)
     {
@@ -42,7 +47,7 @@ public class CombatantSprite(string spritename, Vector2 spritePosition): IClicka
     {
         _spriteRectangle = new((int)_screenPosition.X, (int)_screenPosition.Y, Helper._tileDim, Helper._tileDim);
     }
-        public void OnClick(MouseInfo mouseInfo)
+    public void OnClick(MouseInfo mouseInfo)
     {
         if (_spriteRectangle.Contains(mouseInfo.CurrentState.Position) && mouseInfo.WasButtonJustPressed(MouseButton.Left))
             Selected = true;

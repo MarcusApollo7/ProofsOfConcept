@@ -11,11 +11,11 @@ using System.Diagnostics;
 
 namespace POCLibrary.Graphics;
 
-public class Tilemap
+public class Tilemap: IRenderable
 {
     private readonly Tileset _tileset;
     private readonly Tile[,] _tiles;
-
+    public string Name {get; } = "TILEMAP";
     /// <summary>
     /// Gets the total number of rows in this tilemap.
     /// </summary>
@@ -97,8 +97,11 @@ public class Tilemap
         _tiles[i, j]._screenPosition = new(j * TileWidth * 4, i * TileHeight * 4);
         _tiles[i, j]._spriteRectangle = new((int)(j * TileWidth * 4), (int)(i * TileHeight * 4), (int)TileWidth*4, (int)TileHeight * 4); 
     }
-
-    public void Update(MouseInfo mouseInfo)
+    public void Update(GameTime gameTime)
+    {
+        
+    }
+    public void CheckClickHover(MouseInfo mouseInfo)
     {
         for (int i = 0; i < Rows; i++)
         {

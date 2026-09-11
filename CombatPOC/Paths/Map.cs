@@ -23,7 +23,7 @@ public class Map
     public Location GetLocation(int x_index, int y_index)
     {
         if (x_dim > x_index && y_dim > y_index && x_index >= 0 && y_index >= 0)
-            return _map[x_index, y_index];
+            return _map[y_index, x_index];
         else 
             return null;
     }

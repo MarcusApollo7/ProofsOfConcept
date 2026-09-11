@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -97,7 +98,7 @@ public class Core : Game
         // Set the core's graphics device to a reference of the base Game's
         // graphics device.
         GraphicsDevice = base.GraphicsDevice;
-
+        
         // Create the sprite batch instance.
         SpriteBatch = new SpriteBatch(GraphicsDevice);
 

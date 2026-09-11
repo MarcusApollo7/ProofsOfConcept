@@ -23,6 +23,7 @@ public class AStar
     public static List<Location> FindPath(Location Start, Location target)
     {
         open.Add(Start);
+        Debug.WriteLine($"Start: {Start.X}, {Start.Y}");
         while (open.Count > 0)
         {
             var lowest = open.Min(l => l.F);

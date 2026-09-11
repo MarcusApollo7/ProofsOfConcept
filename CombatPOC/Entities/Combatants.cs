@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework.Input;
 using CombatPOC.Managers;
 using CombatPOC.Paths;
 using System.Collections.Generic;
+using System.Linq;
+using POCLibrary.Interfaces;
 
 namespace CombatPOC.Entities;
 
@@ -68,7 +70,7 @@ public abstract class Combatant: IActor
         foreach(Combatant combatant in CombatManager._combatants)
         {
             int distance = CombatManager.DistanceBetweenCombatants(this, combatant);
-            if (distance < minCombatantDistance)
+            if (distance < minCombatantDistance && distance != 0)
             {
                 closestCombatant = combatant;
             }
@@ -76,7 +78,7 @@ public abstract class Combatant: IActor
         return closestCombatant;
     }
     public abstract void CheckForPlayerInput(InputManager input);
-    public abstract void GetMovesFromPathfinder(Combatant targetCombatant);
+    public abstract List<TileLocation> GetMovesFromPathfinder(Combatant targetCombatant);
     public void Move()
     {
         switch (_stats.characterDirection)
@@ -101,25 +103,20 @@ public abstract class Combatant: IActor
         _stats.CurHealth += amount;
     }
     // basic methods
-    public void Initialize(CombatantActorRoutine actorRoutine)
+    public void Initialize()
     {
         ActorManager.AddActor(this);
         _sprite.Initialize();
-        _stats._actor = actorRoutine;
     }
     public void LoadSpriteFromAtlas(TextureAtlas atlas, Vector2 scale)
     {
         _sprite._animatedSprite = atlas.CreateAnimatedSprite(_sprite._spriteName);
         _sprite._animatedSprite.Scale = scale;
     }
-    public void Update(GameTime gameTime, MouseInfo mouseInfo)
-    {
-        _sprite.Update(gameTime, mouseInfo);
-    }
-    public void Draw(SpriteBatch spriteBatch, Texture2D texture2D)
+    public void Draw(SpriteBatch spriteBatch)
     {
         _sprite.Draw(spriteBatch);
-        _proposedAct?.actSprite.Draw(spriteBatch, texture2D);
+        _proposedAct?.actSprite.Draw(spriteBatch);
     }
 }
 
@@ -127,11 +124,12 @@ public class Hero: Combatant
 {
     public Hero(float attack, float defense, float health, string spritename, TileLocation tileLocation) : base(attack, defense, health, spritename, tileLocation)
     {
-        
+        _stats._team = TeamEnum.Player;
+        _stats._actor = new PlayerActor(ActorID);
     }
-    public override void GetMovesFromPathfinder(Combatant targetCombatant)
+    public override List<TileLocation> GetMovesFromPathfinder(Combatant targetCombatant)
     {
-        
+        return [];
     }
      public override void CheckForPlayerInput(InputManager input)
     {
@@ -180,20 +178,38 @@ public class Grunt: Combatant
 {
     public Grunt(float attack, float defense, float health, string spritename, TileLocation tileLocation) : base(attack, defense, health, spritename, tileLocation)
     {
-        
+        _stats._team = TeamEnum.Enemy;
+        _stats._actor = new GruntActor(ActorID);
     }
     public override void CheckForPlayerInput(InputManager input)
     {
         
     }
-    public override void GetMovesFromPathfinder(Combatant targetCombatant)
+    public override List<TileLocation> GetMovesFromPathfinder(Combatant targetCombatant)
     {
-        List<Location> Moves = AStar.FindPath(_stats._tileLocation.ToWalkableLocation(), targetCombatant._stats._tileLocation.ToWalkableLocation());
-        for(int i = 0; i < _stats.TilesPerMove; i++)
+        List<TileLocation> potentialTargets = [];
+        foreach(Attack attack in _stats._actor.Actions.Cast<Attack>()) //ACTOR IS NULL WHEN CALLED
         {
-            JumpToNewPosition(Moves[i].ToTileLocation());
+            potentialTargets.AddRange(attack.DetermineAttackableTiles(targetCombatant));
         }
+        int distance = 100000;
+        TileLocation target = _stats._tileLocation;
+        foreach(TileLocation tile in potentialTargets)
+        {
+            if (CombatManager.DistanceBetweenTiles(_stats._tileLocation, tile) < distance && distance > 0)
+            {
+                target = tile;
+            }
+        }
+        List<Location> Moves = AStar.FindPath(_stats._tileLocation.ToWalkableLocation(), target.ToWalkableLocation());
+        int maxSteps = Math.Min(Moves.Count - 1, _stats.TilesPerMove + 100000);
+        List<TileLocation> movesFromPathfinder = [];
+        for(int i = 0; i <= maxSteps; i++)
+        {
+            movesFromPathfinder.Add(Moves[i].ToTileLocation());
             
+        }
+        return movesFromPathfinder;   
 
     }
 }

@@ -16,7 +16,6 @@ namespace CombatPOC;
 
 public class CombatPOC : Core
 {
-    public Texture2D _whiteRectangle;
     public static Vector2 _scale = new(4.0f, 4.0f);
     private CombatManager _combatManager = new();
     public CombatPOC() : base("CombatPOC", 1280, 720, false)
@@ -28,19 +27,12 @@ public class CombatPOC : Core
     {
         // Init Base Class
         base.Initialize();
-        _whiteRectangle = new Texture2D(GraphicsDevice, 1, 1);
-        _whiteRectangle.SetData([Color.White]);
-        // Initial slime position will be the center tile of the tile map
-        
     }
     protected override void LoadContent()
     {
-
         // Init combatManger
-        _combatManager.Initialize();
+        _combatManager.Initialize(Graphics.GraphicsDevice);
         _combatManager.LoadContent();
-        
-
     }
     protected override void Update(GameTime gameTime)
     {
@@ -56,7 +48,7 @@ public class CombatPOC : Core
         // Begin the sprite batch to prepare for rendering.
         SpriteBatch.Begin();
 
-        _combatManager.Draw(SpriteBatch, _whiteRectangle);
+        _combatManager.Draw(SpriteBatch);
 
         // Always end the sprite batch when finished.
         SpriteBatch.End();

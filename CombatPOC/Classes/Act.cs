@@ -7,6 +7,7 @@ using CombatPOC.Logic;
 using System;
 using POCLibrary;
 using System.Diagnostics;
+using CombatPOC.Managers;
 
 namespace CombatPOC.Classes;
 
@@ -65,11 +66,11 @@ public record class ActSprite
             _rectangles[i] = new(tileLocations[i].X * Helper._tileDim, tileLocations[i].Y * Helper._tileDim, Helper._tileDim, Helper._tileDim);
         }
     }
-    public void Draw(SpriteBatch spriteBatch, Texture2D _whiteRectangle)
+    public void Draw(SpriteBatch spriteBatch)
     {
         for(int i = 0; i < tileNumber; i++)
         {
-            spriteBatch.Draw(_whiteRectangle, _rectangles[i], Color.Red * 0.5f);
+            spriteBatch.Draw(CombatManager._UIManager._whiteRectangle, _rectangles[i], Color.Red * 0.5f);
         }
     }
 }
