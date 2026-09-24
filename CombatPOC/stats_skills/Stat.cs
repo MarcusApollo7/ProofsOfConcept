@@ -30,7 +30,6 @@ RemoveAllModifiersFromSource: Removes all modifiers with a given source
     public float BaseVal;
     protected float _value;
     protected float lastBaseVal = float.MinValue;
-    private object value;
 
     public virtual float Value
     {
@@ -61,9 +60,9 @@ RemoveAllModifiersFromSource: Removes all modifiers with a given source
         name = Name;
     }
 
-    public Stat(object value)
+    public Stat(float value): this()
     {
-        this.value = value;
+        BaseVal = value;
     }
 
 

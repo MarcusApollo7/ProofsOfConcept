@@ -16,7 +16,6 @@ namespace CombatPOC;
 
 public class CombatPOC : Core
 {
-    public static Vector2 _scale = new(4.0f, 4.0f);
     private CombatManager _combatManager = new();
     public CombatPOC() : base("CombatPOC", 1280, 720, false)
     {

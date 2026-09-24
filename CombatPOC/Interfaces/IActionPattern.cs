@@ -10,6 +10,15 @@ namespace CombatPOC.Interfaces;
 public interface IActionPattern
 {
     TileLocation[] Pattern {get; }
+    float[] DmgModPerTile {get; }
+    int Count {
+        get{
+            if (Pattern.Length == DmgModPerTile.Length)
+                return Pattern.Length; 
+            else
+                throw new ArgumentException("DmgModPerTile and Pattern must be the same length");
+        }
+    }
     TileLocation[] RotatePattern(CharacterDirection characterDirection)
     {
         int cosAngle = 1;

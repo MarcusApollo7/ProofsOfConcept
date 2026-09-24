@@ -43,3 +43,6 @@
 #begin images/tilemap-definition.xml
 /copy:images/tilemap-definition.xml
 
+#begin images/tilemap-walk-definition.xml
+/copy:images/tilemap-walk-definition.xml
+

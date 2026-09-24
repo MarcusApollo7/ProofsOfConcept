@@ -4,6 +4,7 @@ using CombatPOC.Enum;
 using CombatPOC.Entities;
 using CombatPOC.Logic;
 using Microsoft.Xna.Framework;
+using CombatPOC.Interfaces;
 
 namespace CombatPOC.Managers;
 
@@ -15,14 +16,14 @@ public sealed class ActionResolver
     }
     public void ResolveAction(Act act, Party combatants)
     {
-        foreach(ActionEffect ae in act.action.ActionEffects)
+        foreach(ActionEffect ae in act.Action.ActionEffects)
         {
-            foreach(TileLocation position in act.tilesActedUpon)
+            foreach(TileLocation position in act.TilesActedUpon)
             {
                 switch (ae)
                 {
                     case ActionEffect.physical:
-                        ResolvePhysical(act.actorcombatant, position, combatants);
+                        ResolvePhysical(act.ActorCombatant, position, combatants);
                     break;
                     default:
                         ResolveDefault();
@@ -31,16 +32,9 @@ public sealed class ActionResolver
             }
         }
     }
-    public void ResolvePhysical(Combatant attacker, TileLocation position, Party combatants)
+    public void ResolvePhysical(IActor attacker, TileLocation position, Party combatants)
     {
-        foreach(Combatant combatant in combatants)
-        {
-            if (combatant._stats.CheckSamePosition(position))
-            {
-                float dmg = DamageCalculator.CalculateDamage(attacker, combatant);
-                combatant.ChangeCurHealth(-dmg); 
-            }
-        }
+        return;
     }
     public void ResolveDefault()
     {

@@ -3,13 +3,20 @@ using System.Linq;
 using System.Collections.Generic;
 using POCLibrary.Graphics;
 using CombatPOC.Entities;
-using System.Diagnostics;
 using CombatPOC.Managers;
-using CombatPOC.Classes;
+using CombatPOC.Logic;
 
 namespace CombatPOC.Paths;
 
-public class AStar
+public interface IPathfinder
+{
+    int? DistanceBetween(TileLocation start, TileLocation end);
+    List<TileLocation> FindPath(TileLocation start, TileLocation end);
+    List<TileLocation> FindLocationsWithinDistance(int distance, TileLocation start);
+
+}
+
+public class AStar: IPathfinder
 {
     public static Map _map;
     static Location current = null;
@@ -20,10 +27,29 @@ public class AStar
     {
         _map = new(tilemap);
     }
-    public static List<Location> FindPath(Location Start, Location target)
+    public int? DistanceBetween(Combatant source, Combatant target)
     {
-        open.Add(Start);
-        Debug.WriteLine($"Start: {Start.X}, {Start.Y}");
+        return DistanceBetween(source.TileLocation, target.TileLocation);
+    }
+    public int? DistanceBetween(TileLocation start, TileLocation end)
+    {
+        List<TileLocation> path = FindPath(start, end);
+        int? output = null;
+        if (path != null)
+        {
+            output = path.Count - 1;
+            ResetPathFinder();
+            return output;
+        }
+        return output;
+    }
+    public List<TileLocation> FindPath(Combatant source, Combatant target)
+    {
+        return FindPath(source.TileLocation, target.TileLocation);
+    }
+    public List<TileLocation> FindPath(TileLocation Start, TileLocation target)
+    {
+        open.Add(ConvertTileLocationToLocation(Start));
         while (open.Count > 0)
         {
             var lowest = open.Min(l => l.F);
@@ -34,7 +60,15 @@ public class AStar
             // remove it from the open list
             open.Remove(current);
             if (closed.FirstOrDefault(l => l.X == target.X && l.Y == target.Y) != null)
-                return closed;
+            {
+                List<TileLocation> output = [];
+                foreach(Location tile in closed)
+                {
+                    output.Add(tile.ToTileLocation());
+                }
+                ResetPathFinder();
+                return output;
+            }
             List<Location> adjacentTiles = GetAdjacentTiles(current.X, current.Y);
             foreach(Location tile in adjacentTiles)
             {
@@ -54,13 +88,42 @@ public class AStar
             }
             g++;
         }
+        ResetPathFinder();
         return null;
+    }
+    public List<TileLocation> FindLocationsWithinDistance(int distance, Combatant combatant)
+    {
+        return FindLocationsWithinDistance(distance, combatant.TileLocation);
+    }
+    public List<TileLocation> FindLocationsWithinDistance(int distance, TileLocation start)
+    {
+        List<TileLocation> reachableTiles = [];
+        Queue<TileLocation> searchQueue = new();
+        List<TileLocation> visitedLocations = [];
+        searchQueue.Enqueue(start);
+        visitedLocations.Add(start);
+        while (searchQueue.Count > 0)
+        {
+            TileLocation currentLocation = searchQueue.Dequeue();
+            if (!reachableTiles.Contains(currentLocation))
+                reachableTiles.Add(currentLocation);
+            if (!visitedLocations.Contains(currentLocation))
+                visitedLocations.Add(currentLocation);
+            foreach(TileLocation tile in GetAdjacentTiles(currentLocation))
+            {
+                if (CombatManager._pathFinder.DistanceBetween(start, tile) <= distance && !visitedLocations.Contains(tile))
+                {
+                    searchQueue.Enqueue(tile);
+                }
+            }
+        }
+        return reachableTiles;
     }
     public static int ComputeHScore(int x, int y, int targetX, int targetY)
     {
         return Math.Abs(targetX - x) + Math.Abs(targetY - y);
     }
-    public static List<Location> GetAdjacentTiles(int x, int y)
+    public List<Location> GetAdjacentTiles(int x, int y)
     {
         
         return
@@ -71,15 +134,29 @@ public class AStar
                 _map.GetLocation(x + 1, y)
             ];
     }
-    public static void ResetPathFinder()
+    public List<TileLocation> GetAdjacentTiles(TileLocation tileLocation)
+    {
+        List<TileLocation> output = [];
+        foreach(Location location in GetAdjacentTiles(tileLocation.X, tileLocation.Y))
+        {
+            if (location != null)
+                output.Add(location.ToTileLocation());
+        }
+        return output;
+    }
+    public void ResetPathFinder()
     {
         current = null;
         open = [];
         closed = [];
         g = 0;
     }
-    public static void ResetMap()
+    public void ResetMap(Tilemap newTileMap)
     {
-        
+        _map = new(newTileMap);
+    }
+    public Location ConvertTileLocationToLocation(TileLocation location)
+    {
+        return new(location.x, location.y, location.Walkable);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Managers;
@@ -15,7 +16,6 @@ public class Timer
                 throw new ArgumentOutOfRangeException(nameof(intervalSeconds), "Interval must be positive.");
         _interval = intervalSeconds;
         _isLooping = isLooping;
-
     }
     public void Start()
     {

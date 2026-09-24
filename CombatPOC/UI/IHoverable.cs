@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework;
 using POCLibrary.Input;
 
-namespace POCLibrary.Interfaces;
+namespace CombatPOC.UI;
 
 public interface IHoverable
 {
-    Rectangle _spriteRectangle {get; set;}
+    Rectangle _spriteRectangle {get; }
     bool Hovered {get; set; }
     void OnHover(MouseInfo mouseInfo)
     {
