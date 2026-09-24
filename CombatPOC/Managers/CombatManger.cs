@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using CombatPOC.Classes;
 using CombatPOC.Entities;
-using CombatPOC.Interfaces;
-using CombatPOC.Logic;
 using CombatPOC.Paths;
 using CombatPOC.UI;
 using Microsoft.Xna.Framework;

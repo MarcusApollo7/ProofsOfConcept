@@ -1,13 +1,8 @@
-using CombatPOC.Interfaces;
 using CombatPOC.Classes;
 using CombatPOC.Entities;
-using System.Diagnostics;
-using Microsoft.Xna.Framework.Graphics;
-using CombatPOC.Paths;
 using System.Collections.Generic;
 using CombatPOC.Logic;
 using CombatPOC.UI;
-using System;
 using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Managers;

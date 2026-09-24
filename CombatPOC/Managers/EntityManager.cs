@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using CombatPOC.Interfaces;
-using CombatPOC.UI;
 
 namespace CombatPOC.Managers;
 

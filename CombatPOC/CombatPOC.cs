@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using CombatPOC.Classes;
-using CombatPOC.Entities;
-using CombatPOC.Managers;
-using CombatPOC.Paths;
+﻿using CombatPOC.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using POCLibrary;
-using POCLibrary.Graphics;
-using POCLibrary.Input;
 
 namespace CombatPOC;
 

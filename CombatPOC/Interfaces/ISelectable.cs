@@ -1,5 +1,4 @@
 using System;
-using CombatPOC.Enum;
 
 namespace CombatPOC.Interfaces;
 

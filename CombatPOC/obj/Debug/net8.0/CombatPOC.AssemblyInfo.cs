@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CombatPOC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6542696c42cc3a35be2ff2d2dfc7bdcbf85f9c7c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55b00b70c173829379a0e0280ab164199151eeb0")]
 [assembly: System.Reflection.AssemblyProductAttribute("CombatPOC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CombatPOC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

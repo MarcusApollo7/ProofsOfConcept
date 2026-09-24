@@ -5,9 +5,6 @@ using CombatPOC.Managers;
 using static POCLibrary.Core;
 using CombatPOC.Interfaces;
 using POCLibrary.Input;
-using CombatPOC.Enum;
-using CombatPOC.Entities;
-using System.Diagnostics;
 using CombatPOC.Logic;
 
 namespace CombatPOC.UI;

@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using CombatPOC.Paths;
 using Microsoft.Xna.Framework;
-using POCLibrary;
 
 namespace CombatPOC.Logic;
 

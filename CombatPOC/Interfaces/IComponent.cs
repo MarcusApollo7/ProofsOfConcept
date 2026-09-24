@@ -1,5 +1,3 @@
-using CombatPOC.Managers;
-
 namespace CombatPOC.Interfaces;
 
 public interface IComponent

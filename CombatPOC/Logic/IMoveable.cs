@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using CombatPOC.Entities;
 using CombatPOC.Interfaces;
-using CombatPOC.Paths;
 
 namespace CombatPOC.Logic;
 

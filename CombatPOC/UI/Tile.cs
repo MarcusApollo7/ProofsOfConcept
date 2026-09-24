@@ -1,13 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using POCLibrary.Graphics;
-using POCLibrary.Input;
 using CombatPOC.Logic;
 using static POCLibrary.Core;
-using CombatPOC.Managers;
-using CombatPOC.Interfaces;
-using System;
-using System.Diagnostics;
 
 namespace CombatPOC.UI;
 

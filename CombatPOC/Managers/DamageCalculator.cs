@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using CombatPOC.Entities;
 using CombatPOC.Interfaces;
 using CombatPOC.Logic;

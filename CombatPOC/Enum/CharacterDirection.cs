@@ -1,6 +1,3 @@
-using System;
-using System.Net.NetworkInformation;
-
 namespace CombatPOC.Enum;
 
 public enum CharacterDirection
