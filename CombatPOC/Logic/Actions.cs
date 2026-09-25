@@ -5,12 +5,21 @@ using CombatPOC.Entities;
 using Microsoft.Xna.Framework;
 using CombatPOC.Managers;
 using System;
+using System.Diagnostics;
 
 namespace CombatPOC.Logic;
 
-public class ActionList(List<IAction> actions)
+public class ActionList
 {
-    private List<IAction> _actions = actions;
+    private List<IAction> _actions;
+    public ActionList()
+    {
+        _actions = [];
+    }
+    public ActionList(List<IAction> actions)
+    {
+        _actions = actions;
+    }
     public T Get<T>() where T : IAction
     {
         foreach (IAction action in _actions)
@@ -34,6 +43,11 @@ public class ActionList(List<IAction> actions)
         }
         return output;
         throw new InvalidOperationException($"No components of type {typeof(T).Name} were found.");
+    }
+    public void Add(IAction action)
+    {
+        if (!_actions.Contains(action))
+            _actions.Add(action);
     }
 }
 public class MoveAction: IAction
@@ -88,23 +102,16 @@ public abstract class Attack: IAction
     public abstract IActionPattern ActionPattern {get; }
     public abstract List<ActionEffect> ActionEffects {get; }
     public int Count {get => ActionPattern.Count;}
-    public Dictionary<TileLocation, float> DmgToTiles {
-        get{
-            Dictionary<TileLocation, float> output = [];
-            for(int i = 0; i < ActionPattern.Count; i++)
-            {
-                output[ActionPattern.Pattern[i]] = ActionPattern.DmgModPerTile[i];
-            }; 
-            return output;
-        }
-    }
-    public abstract List<TileLocation> DetermineAttackableTiles(TileLocation tile);
+    public float[] DmgToTiles { get=> ActionPattern.DmgModPerTile; }
     public Act Execute(Combatant source)
     {
         List<TileLocation> positionsactedupon = [];
         TileLocation positionTile = source.TileLocation;
         foreach (TileLocation position in ActionPattern.RotatePattern(source.ActorDirection))
         {
+            
+            Debug.WriteLine($"Position : {position.X}, {position.Y}");
+            Debug.WriteLine($"positionTile: {positionTile.X}, {positionTile.Y}");
             TileLocation newPos = positionTile+position;
             positionsactedupon.Add(newPos);
         }
@@ -120,17 +127,17 @@ public abstract class DirectAttack: Attack
 public class BasicAttack: DirectAttack
 {
     public override string ActionName {get; } = "Basic Attack";
-    public override float Cost {get; } = 1;
+    public override float Cost {get; } = Constants.BasicAttackCost;
     public override float BaseStrength {get; } = Constants.BasicAttackStrength;
     public override List<ActionEffect> ActionEffects {get; } = [ActionEffect.physical];
     public override IActionPattern ActionPattern {get; } = new BasicActionPattern();
-    public override List<TileLocation> DetermineAttackableTiles(TileLocation tile)
-    {
-        int targetX = tile.X;
-        int targetY = tile.Y;
-        return [new(targetX + 1, targetY),
-                new(targetX - 1, targetY),
-                new(targetX, targetY + 1),
-                new(targetX, targetY - 1)];
-    }
+}
+
+public class SwordHeavyAttack: DirectAttack
+{
+    public override string ActionName {get; } = "Sword Heavy Attack";
+    public override float Cost {get; } = Constants.HeavyAttackCost;
+    public override float BaseStrength {get; } = Constants.HeavyAttackStrength;
+    public override List<ActionEffect> ActionEffects {get; } = [ActionEffect.physical];
+    public override IActionPattern ActionPattern {get; } = new BasicActionPattern();
 }

@@ -32,9 +32,9 @@ public class Combatant: IEntity, IActor, IRenderable, IMoveable, ISelectable, IA
     public CharacterDirection ActorDirection {get => actorDirection; set=> actorDirection = value; }
     public IWeapon RightItem {get; set; }
     public int TilesPerMove {get => Moveable.TilesPerMove; set => Moveable.TilesPerMove = value; }
-    private float _attackRating;
+    private float _attackRating = 10;
     public float AttackRating {get => _attackRating; set => _attackRating = value;}
-    private float _defenseRating;
+    private float _defenseRating = 5;
     public float DefenseRating {get => _defenseRating; set => _defenseRating = value; }
     public Combatant(float str, float dex, float eva, float tgh, float health, TileLocation tileLocation, TeamEnum team, string spritename)
     {        

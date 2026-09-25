@@ -51,13 +51,6 @@ public sealed class TurnManager
         }
         TurnTeam = TeamEnum.Player;
     }
-    private void GetPlayerActs()
-    {
-        if (CombatManager._inputHandler.ActiveEntity is Combatant player && player.ActorRoutine is PlayerActor)
-        {
-            player.TakeTurn(GetBattleState());
-        }
-    }
     private BattleState GetBattleState()
     {
         return new(CombatState, TurnNum, _friends, _foes);
@@ -70,7 +63,7 @@ public sealed class TurnManager
         }
         else
         {
-            GetPlayerActs();
+            
         }
         if (_ActionQueue.Count >= 1)
         {
@@ -82,23 +75,31 @@ public sealed class TurnManager
     {
         foreach(Act act in acts)
         {
-            IAction action = act.Action;
-            Combatant actor = act.ActorCombatant;
-            List<TileLocation> locations = act.TilesActedUpon;
-            if (action is MoveAction)
+            ImplementAction(act);
+        }
+    }
+    public void ImplementAction(Act act)
+    {
+        IAction action = act.Action;
+        Combatant actor = act.ActorCombatant;
+        List<TileLocation> locations = act.TilesActedUpon;
+        if (action is MoveAction)
+        {
+            actor.MovePath(act);
+        }
+        if (action is Attack)
+        {
+            actor.DoAttack(act);
+            Combatant[] defenders = GetCombatantsByTiles(locations);
+            foreach(Combatant defender in defenders)
             {
-                actor.MovePath(act);
-            }
-            if (action is Attack)
-            {
-                actor.DoAttack(act);
-                Combatant[] defenders = GetCombatantsByTiles(locations);
-                foreach(Combatant defender in defenders)
-                {
-                    _calculator.DealDamageToDefender(actor, act, defender);
-                }
+                _calculator.DealDamageToDefender(actor, act, defender);
             }
         }
+    }
+    public void EnactPlayerAct()
+    {
+        ImplementAction(PlayerAct);
     }
     private Combatant[] GetCombatantsByTiles(List<TileLocation> locations)
     {

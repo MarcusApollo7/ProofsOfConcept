@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CombatPOC.Entities;
 using CombatPOC.Enum;
@@ -18,13 +19,16 @@ public class PlayerActor: IActorRoutine
     public int EntityID {get; }
     public float BaseActionPoints {get; }= 2;
     public int ComponentID {get; }
-    private IAction[] Actions;
+    public MoveAction Move {get => Actions.Get<MoveAction>(); }
+    public List<Attack> Attacks {get=> Actions.GetAll<Attack>(); }
+    private ActionList Actions = new();
     private List<Act> _selectedActs = [];
     // Properties
     public PlayerActor(int entityID)
     {
         EntityID = entityID;
-        Actions = [new MoveAction(Constants.PlayerMaxMoves), new BasicAttack()];
+        Actions.Add(new MoveAction(Constants.PlayerMaxMoves));
+        Actions.Add(new BasicAttack());
     }
     public List<Act> TakeTurn(Combatant self, List<Combatant> possibleTargets)
     {
@@ -33,17 +37,6 @@ public class PlayerActor: IActorRoutine
     public void SetAct(Act act)
     {
         _selectedActs.Add(act);
-    }
-    public T SelectMove<T>() where T: IAction
-    {
-        foreach(IAction action in Actions)
-        {
-            if (action is T)
-            {
-                return (T)action;
-            }
-        }
-        return default;
     }
 
 }

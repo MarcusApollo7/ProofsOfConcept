@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CombatPOC.Entities;
 using CombatPOC.Interfaces;
 using CombatPOC.Logic;
@@ -12,11 +13,12 @@ public class DamageCalculator
     {
         if (act.Action is Attack attack)
         {   
-            foreach(KeyValuePair<TileLocation, float> TileDmg in attack.DmgToTiles)
+            for(int i = 0; i < attack.DmgToTiles.Length; i++)
             {
-                if (defender.TileLocation == TileDmg.Key)
+                Debug.WriteLine(defender.TileLocation);
+                if (defender.TileLocation == act.TilesActedUpon[i])
                 {
-                    float dmg = attacker.AttackRating - defender.DefenseRating;
+                    float dmg = (attacker.AttackRating - defender.DefenseRating) * attack.DmgToTiles[i];
                     defender.ChangeHealth(dmg);
                 }
             }

@@ -16,13 +16,14 @@ namespace CombatPOC.Managers;
 public class InputHandler
 {
     private IEntity _activeEntity;
+    private bool PlayerActionPrimed = false;
     public IEntity ActiveEntity {get => _activeEntity; set=> _activeEntity = value;}
     public void SetActiveEntity(IEntity entity)
     {
         _activeEntity = entity;
         if (entity is Combatant combatant && entity.GetComponent<IActorRoutine>() is PlayerActor actor)
         {
-            MoveAction move = actor.SelectMove<MoveAction>();
+            MoveAction move = actor.Move;
             Act fullMoveAct = move.GetFullMove(combatant, combatant.TileLocation);
             CombatManager._TurnManager.SetPlayerAct(fullMoveAct);
         }
@@ -41,10 +42,11 @@ public class InputHandler
                 SelectNonPlayerCombatant();
             }
         }
-        if (Input.Mouse.WasButtonJustReleased(MouseButton.Right))
+        if (Input.Mouse.WasButtonJustPressed(MouseButton.Right))
             {
                 _activeEntity = null;
                 CombatManager._TurnManager.SetPlayerAct(null);
+                PlayerActionPrimed = false;
             }
     }
     public void CheckPlayerInput()
@@ -66,8 +68,12 @@ public class InputHandler
             if (Input.Keyboard.WasKeyJustPressed(Keys.D))
             {
                 combatant.ActorDirection = CharacterDirection.Right;
-            }            
-            if (Input.Mouse.IsButtonDown(MouseButton.Left))
+            }
+            if (Input.Mouse.WasButtonJustPressed(MouseButton.Left) && PlayerActionPrimed == true)
+            {
+                CombatManager._TurnManager.EnactPlayerAct();
+            }          
+            if (Input.Mouse.IsButtonDown(MouseButton.Left) && PlayerActionPrimed == false)
             {
 
                 Act playerAct = CombatManager._TurnManager.ReturnPlayerAct();
@@ -96,8 +102,9 @@ public class InputHandler
             }
             if (Input.Keyboard.WasKeyJustPressed(Keys.X))
             {
-                BasicAttack attack = actor.SelectMove<BasicAttack>();
-                actor.SetAct(attack.Execute(combatant));
+                Attack attack = actor.Attacks[0];
+                CombatManager._TurnManager.SetPlayerAct(attack.Execute(combatant));
+                PlayerActionPrimed = true;
             }
         }
     }
