@@ -15,7 +15,6 @@ public class DamageCalculator
         {   
             for(int i = 0; i < attack.DmgToTiles.Length; i++)
             {
-                Debug.WriteLine(defender.TileLocation);
                 if (defender.TileLocation == act.TilesActedUpon[i])
                 {
                     float dmg = (attacker.AttackRating - defender.DefenseRating) * attack.DmgToTiles[i];

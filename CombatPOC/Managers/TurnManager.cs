@@ -16,7 +16,7 @@ public sealed class TurnManager
     private Resolutions CombatState = Resolutions.Undecided;
     private Act PlayerAct = null;
     private readonly Queue<List<Act>> _ActionQueue = new();
-    private readonly List<Combatant> _actors = [];
+    public readonly List<Combatant> _actors = [];
     private readonly List<Combatant> _foes = [];
     private readonly List<Combatant> _friends = [];
 

@@ -7,6 +7,7 @@ namespace CombatPOC.Managers;
 public class SelectableManager
 {
     private List<ISelectable> _selectables = [];
+    private IEntity ActiveEntity {get => CombatManager._inputHandler.ActiveEntity; set=> CombatManager._inputHandler.SetActiveEntity(value); }
     public void AddSelectable(ISelectable selectable)
     {
         _selectables.Add(selectable);
@@ -20,6 +21,7 @@ public class SelectableManager
     }
     public void DoOnSelect(ISelectable sender, SelectEventArgs e)
     {
-        CombatManager._inputHandler.SetActiveEntity(e.Entity);
+        if (ActiveEntity != e.Entity)
+            ActiveEntity = e.Entity;
     }
 }

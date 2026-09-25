@@ -18,6 +18,7 @@ public class InputHandler
     private IEntity _activeEntity;
     private bool PlayerActionPrimed = false;
     public IEntity ActiveEntity {get => _activeEntity; set=> _activeEntity = value;}
+    private Act PlayerAct {get => CombatManager._TurnManager.ReturnPlayerAct(); set => CombatManager._TurnManager.SetPlayerAct(value);}
     public void SetActiveEntity(IEntity entity)
     {
         _activeEntity = entity;
@@ -45,7 +46,7 @@ public class InputHandler
         if (Input.Mouse.WasButtonJustPressed(MouseButton.Right))
             {
                 _activeEntity = null;
-                CombatManager._TurnManager.SetPlayerAct(null);
+                PlayerAct = null;
                 PlayerActionPrimed = false;
             }
     }
@@ -53,81 +54,103 @@ public class InputHandler
     {
         if (_activeEntity is Combatant combatant && _activeEntity.GetComponent<IActorRoutine>() is PlayerActor actor)
         {
-            if (Input.Keyboard.WasKeyJustPressed(Keys.A))
-            {
-                combatant.ActorDirection = CharacterDirection.Left;
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.W))
-            {
-                combatant.ActorDirection = CharacterDirection.Up;
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.S))
-            {
-                combatant.ActorDirection = CharacterDirection.Down;
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.D))
-            {
-                combatant.ActorDirection = CharacterDirection.Right;
-            }
-            if (Input.Mouse.WasButtonJustPressed(MouseButton.Left) && PlayerActionPrimed == true)
-            {
-                CombatManager._TurnManager.EnactPlayerAct();
-            }          
-            if (Input.Mouse.IsButtonDown(MouseButton.Left) && PlayerActionPrimed == false)
-            {
-
-                Act playerAct = CombatManager._TurnManager.ReturnPlayerAct();
-                Vector2 end = playerAct.TilesActedUpon[0].GetCenter();
-                Vector2 origin = Input.Mouse.Position.ToVector2();
-                Vector2 normDirection = (end - origin)/(end-origin).Length();
-
-                TileLocation tile = Helper.TraverseTiles2D(
-                    origin, 
-                    normDirection, 
-                    CombatManager.map.MapWidth, 
-                    CombatManager.map.MapHeight, 
-                    visit: tile =>
-                    {
-                        // Check if this tile is in the list
-                        bool isBlocked = playerAct.TilesActedUpon.Any(t => t.X == tile.X && t.Y == tile.Y);
-
-                        return isBlocked; // stop traversal if blocked
-                    });
-                combatant.Move(tile);
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.Z))
-            {
-                
-                
-            }
-            if (Input.Keyboard.WasKeyJustPressed(Keys.X))
-            {
-                Attack attack = actor.Attacks[0];
-                CombatManager._TurnManager.SetPlayerAct(attack.Execute(combatant));
-                PlayerActionPrimed = true;
-            }
+            TurnCharacter(combatant);
+            ConfirmAction(combatant);
+            ChooseAttack(combatant, actor);
         }
     }
-    public void SelectNonPlayerCombatant()
+    private void SelectNonPlayerCombatant()
     {
         Debug.WriteLine("Non-player Combatant Selected!");
     }
-    public void HandleConstantInput()
+    private void HandleConstantInput()
     {
         Random random = new();
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
             if (CombatManager._EntityManager.GetEntity(2) is Combatant enemy && CombatManager._UIManager._animationManager.AnimationFinished())
             {
-                enemy.Move(new(random.Next(4), random.Next(4)));
+                enemy.Move(new(random.Next(1, 4), random.Next(1, 4)));
                 CombatManager._pathFinder.ResetPathFinder();
                 CombatManager._TurnManager.Reset();
                 CombatManager._UIManager._animationManager.ResetRenderActs();
             }
         }
     }
-    public IEntity GetActiveEntity()
+    private void TurnCharacter(Combatant combatant)
     {
-        return ActiveEntity;
+        if (Input.Keyboard.WasKeyJustPressed(Keys.A))
+        {
+            combatant.ActorDirection = CharacterDirection.Left;
+            PlayerAct = PlayerAct.RotateAct(combatant);
+            return;
+        }
+        else if (Input.Keyboard.WasKeyJustPressed(Keys.W))
+        {
+            combatant.ActorDirection = CharacterDirection.Up;
+            PlayerAct = PlayerAct.RotateAct(combatant);
+            return;
+        }
+        else if (Input.Keyboard.WasKeyJustPressed(Keys.S))
+        {
+            combatant.ActorDirection = CharacterDirection.Down;
+            PlayerAct = PlayerAct.RotateAct(combatant);
+            return;
+        }
+        else if (Input.Keyboard.WasKeyJustPressed(Keys.D))
+        {
+            combatant.ActorDirection = CharacterDirection.Right;
+            PlayerAct = PlayerAct.RotateAct(combatant);
+            return;
+        }
+    }
+    private void ChooseAttack(Combatant combatant, PlayerActor actor)
+    {
+        if (Input.Keyboard.WasKeyJustPressed(Keys.Z))
+        {
+            Attack attack = actor.Attacks[0];
+            CombatManager._TurnManager.SetPlayerAct(attack.Execute(combatant));
+            PlayerActionPrimed = true;
+            return;
+        }
+        else if (Input.Keyboard.WasKeyJustPressed(Keys.X))
+        {
+            Attack attack = actor.Attacks[0];
+            CombatManager._TurnManager.SetPlayerAct(attack.Execute(combatant));
+            PlayerActionPrimed = true;
+            return;
+        }
+    }
+    private void ConfirmAction(Combatant combatant)
+    {
+        if (Input.Mouse.WasButtonJustPressed(MouseButton.Left) && PlayerActionPrimed == true)
+        {
+            CombatManager._TurnManager.EnactPlayerAct();
+            PlayerActionPrimed = false;
+            PlayerAct = null;
+            ActiveEntity = null;
+            return;
+        }          
+        else if (Input.Mouse.IsButtonDown(MouseButton.Left) && PlayerActionPrimed == false && PlayerAct != null)
+        {
+            Vector2 end = combatant.TileLocation.GetCenter();
+            Vector2 origin = Input.Mouse.Position.ToVector2();
+            Vector2 normDirection = (end - origin)/(end-origin).Length();
+
+            TileLocation tile = Helper.TraverseTiles2D(
+                origin, 
+                normDirection, 
+                CombatManager.map.MapWidth, 
+                CombatManager.map.MapHeight, 
+                visit: tile =>
+                {
+                    // Check if this tile is in the list
+                    bool isBlocked = PlayerAct.TilesActedUpon.Any(t => t.X == tile.X && t.Y == tile.Y);
+
+                    return isBlocked; // stop traversal if blocked
+                });
+            combatant.Move(tile);
+            return;
+        }
     }
 }

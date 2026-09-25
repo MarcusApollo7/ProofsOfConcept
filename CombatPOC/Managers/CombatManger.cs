@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using CombatPOC.Entities;
+using CombatPOC.Item;
+using CombatPOC.Logic;
 using CombatPOC.Paths;
 using CombatPOC.UI;
 using Microsoft.Xna.Framework;
@@ -9,15 +11,15 @@ namespace CombatPOC.Managers;
 
 public class CombatManager
 {
-    internal static CombatHelper _CombatHelper = new();
-    internal static TurnManager _TurnManager;
-    internal static UIManager _UIManager;
+    internal static TurnManager _TurnManager = new();
+    internal static UIManager _UIManager = new();
     internal static EntityManager _EntityManager = new();
     internal static AStar _pathFinder = new();
     internal static SelectableManager _selectionManger = new();
     internal static InputHandler _inputHandler = new();
     internal static MapEntity map;
     private List<IRenderable> _renderables = new();
+    internal static List<Combatant> Combatants {get => _TurnManager._actors; }
     public CombatManager()
     {
         
@@ -25,9 +27,7 @@ public class CombatManager
     
     public void Initialize(GraphicsDevice graphicsDevice)
     {
-        _UIManager = new();
         _UIManager.Initialize(graphicsDevice);
-        _TurnManager = new(); 
         map = new ("tilemap-walk-definition.xml");
         _pathFinder.Initialize(map.LoadContent());
     }
@@ -35,6 +35,12 @@ public class CombatManager
     {
         Combatant hero1 = new(10, 10, 10, 10, 100, new(5, 5), TeamEnum.Player, "slime-animation");
         _TurnManager.AddCombatant(hero1);
+        Weapon sword = new()
+        {
+            MoneyValue = 55,
+            Weight = 5,
+            Attacks = [new BasicAttack(), new SwordHeavyAttack()]
+        };
         Combatant enemy1 = new(10, 10, 10, 10, 100, new(4, 4), TeamEnum.Enemy, "bat-animation");
         _TurnManager.AddCombatant(enemy1);
     }

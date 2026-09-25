@@ -10,6 +10,7 @@ using CombatPOC.Classes;
 using Microsoft.Xna.Framework.Graphics;
 using CombatPOC.stats_skills;
 using System.Diagnostics;
+using CombatPOC.Item;
 
 namespace CombatPOC.Entities;
 
@@ -22,6 +23,7 @@ public class Combatant: IEntity, IActor, IRenderable, IMoveable, ISelectable, IA
     private CombatantSprite Sprite {get => ((IEntity)this).GetComponent<CombatantSprite>();}
     private CombatantMoveable Moveable {get => ((IEntity)this).GetComponent<CombatantMoveable>();}
     public IActorRoutine ActorRoutine {get => ((IEntity)this).GetComponent<IActorRoutine>();}
+    private InventoryBase Inventory {get; }
     public TileLocation TileLocation {get => Moveable.TileLocation; set => Moveable.TileLocation = value; }
     public Stat[] AttackStats {get => Actor.AttackStats;}
     public Stat[] DefenseStats {get => Actor.DefenseStats;}
@@ -30,7 +32,7 @@ public class Combatant: IEntity, IActor, IRenderable, IMoveable, ISelectable, IA
     public bool IsDowned {get => CurHealth > 0;}
     private CharacterDirection actorDirection;
     public CharacterDirection ActorDirection {get => actorDirection; set=> actorDirection = value; }
-    public IWeapon RightItem {get; set; }
+    public ItemBase RightItem {get; set; }
     public int TilesPerMove {get => Moveable.TilesPerMove; set => Moveable.TilesPerMove = value; }
     private float _attackRating = 10;
     public float AttackRating {get => _attackRating; set => _attackRating = value;}
@@ -51,9 +53,7 @@ public class Combatant: IEntity, IActor, IRenderable, IMoveable, ISelectable, IA
         CombatantMoveable moveable = new(EntityID, tileLocation); 
         Components.Add(moveable);
         if (Team == TeamEnum.Player)
-        {
             Components.Add(new PlayerActor(EntityID));
-        }
         else
             Components.Add(new BasicEnemyActor(EntityID));
         CombatManager._selectionManger.AddSelectable(this);
@@ -109,6 +109,10 @@ public class Combatant: IEntity, IActor, IRenderable, IMoveable, ISelectable, IA
     {
         Debug.WriteLine($"Oh No! {Sprite.RenderableName} has been hit for {Math.Abs(dmg)}!");
         CurHealth += dmg;
+    }
+    public void PickUpItem(IInventoryItem equipable)
+    {
+        
     }
 }
 

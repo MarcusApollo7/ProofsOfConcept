@@ -109,9 +109,6 @@ public abstract class Attack: IAction
         TileLocation positionTile = source.TileLocation;
         foreach (TileLocation position in ActionPattern.RotatePattern(source.ActorDirection))
         {
-            
-            Debug.WriteLine($"Position : {position.X}, {position.Y}");
-            Debug.WriteLine($"positionTile: {positionTile.X}, {positionTile.Y}");
             TileLocation newPos = positionTile+position;
             positionsactedupon.Add(newPos);
         }
