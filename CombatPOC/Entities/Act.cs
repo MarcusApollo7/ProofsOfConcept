@@ -45,7 +45,7 @@ public abstract record class Act: IRenderable
     {
         for(int i = 0; i < TileNumber; i++)
         {
-            spriteBatch.Draw(CombatManager._UIManager._whiteRectangle, _rectangles[i], ActColor * 0.4f);
+            spriteBatch.Draw(CombatManager._CombatUI._whiteRectangle, _rectangles[i], ActColor * 0.4f);
         }
     }
     public void StartAnimationTimer()

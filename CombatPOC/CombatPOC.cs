@@ -8,6 +8,7 @@ namespace CombatPOC;
 public class CombatPOC : Core
 {
     private CombatManager _combatManager = new();
+    private GameUIManager _UIManger = new();
     public CombatPOC() : base("CombatPOC", 1280, 720, false)
     {
         
@@ -37,9 +38,8 @@ public class CombatPOC : Core
         GraphicsDevice.Clear(Color.CornflowerBlue);
         // Begin the sprite batch to prepare for rendering.
         SpriteBatch.Begin();
-
+        
         _combatManager.Draw(SpriteBatch);
-
         // Always end the sprite batch when finished.
         SpriteBatch.End();
     }

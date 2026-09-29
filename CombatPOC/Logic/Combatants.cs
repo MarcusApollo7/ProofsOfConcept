@@ -11,6 +11,7 @@ using CombatPOC.Entities;
 using CombatPOC.Logic.Paths;
 using Microsoft.Xna.Framework;
 using POCLibrary.Graphics;
+using static POCLibrary.Core;
 
 namespace CombatPOC.Logic;
 
@@ -122,6 +123,13 @@ public abstract class BaseCombatant: CombatElement, IAttacker, IAnimatable
         }
 
         return new(Move, this, result, Color.Green);
+    }
+    public override void OnHover()
+    {
+        if (SpriteRectangle.Contains(Input.Mouse.Position))
+            Sprite.Color = Color.Green;
+        else
+            Sprite.Color = Color.White;
     }
 }
 

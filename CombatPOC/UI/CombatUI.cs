@@ -6,6 +6,8 @@ using CombatPOC.Entities;
 using CombatPOC.Logic;
 using CombatPOC.Classes;
 using CombatPOC.Enum;
+using CombatPOC.UI.Basics;
+using static POCLibrary.Core;
 
 namespace CombatPOC.UI;
 
@@ -13,6 +15,7 @@ public class UIManager
 {
     public Texture2D _whiteRectangle;
     private readonly AnimationManager _animationManager = new();
+    public SpriteFont Font {get; set;}
     private BattleState _currentState;
     private List<ScreenElement> ScreenElements {get => _currentState.ScreenElements; }
     private List<BaseCombatant> Combatants {get => _currentState.Combatants; }
@@ -21,6 +24,8 @@ public class UIManager
     {
         _whiteRectangle = new Texture2D(graphicsDevice, 1, 1);
         _whiteRectangle.SetData([Color.White]);
+        Font = Content.Load<SpriteFont>("fonts/font");
+
     }
     public void Draw(SpriteBatch spriteBatch)
     {

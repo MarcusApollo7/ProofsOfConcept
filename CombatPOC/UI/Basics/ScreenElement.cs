@@ -7,7 +7,7 @@ using POCLibrary.Graphics;
 using POCLibrary.Input;
 using static POCLibrary.Core;
 
-namespace CombatPOC.UI;
+namespace CombatPOC.UI.Basics;
 
 public interface IScreenElement: IRenderable
 {
@@ -15,15 +15,14 @@ public interface IScreenElement: IRenderable
     string SpriteName {get; }
     Sprite Sprite {get; }
     Rectangle SpriteRectangle {get => new((int)ScreenPosition.X, (int)ScreenPosition.Y, Helper.TileWidth, Helper.TileHeight ); }
-    void OnHover();
     void Update(GameTime gameTime);
 }
-public abstract partial class ScreenElement: IScreenElement
+public abstract class ScreenElement: IScreenElement
 {
     public Vector2 ScreenPosition {get; set; }
     public string SpriteName {get; set; }
     public Sprite Sprite {get; }
-    public Rectangle SpriteRectangle {get => new((int)ScreenPosition.X, (int)ScreenPosition.Y, Helper.TileWidth, Helper.TileHeight ); }
+    public virtual Rectangle SpriteRectangle {get => new((int)ScreenPosition.X, (int)ScreenPosition.Y, Helper.TileWidth, Helper.TileHeight ); }
     public ScreenElement(Vector2 position, string name, string atlasName)
     {
         ScreenPosition = position;
@@ -42,7 +41,12 @@ public abstract partial class ScreenElement: IScreenElement
             Scale = Helper.Scale
         };
     }
-    public void Draw(SpriteBatch spriteBatch)
+    public ScreenElement(Vector2 position, string text)
+    {
+        ScreenPosition = position;
+        SpriteName = text;
+    }
+    public virtual void Draw(SpriteBatch spriteBatch)
     {
         Sprite.Draw(spriteBatch, ScreenPosition);
     }
@@ -50,11 +54,6 @@ public abstract partial class ScreenElement: IScreenElement
     {
         OnHover();
     }
-    public virtual void OnHover()
-    {
-        if (SpriteRectangle.Contains(Input.Mouse.Position))
-            Sprite.Color = Color.Green;
-        else
-            Sprite.Color = Color.White;
-    }
+    public abstract void OnHover();
+    
 }
