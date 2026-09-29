@@ -8,7 +8,7 @@ public delegate void OnSetPathHandler<PathEventArgs>(IMoveable sender, PathEvent
 
 public class PathEventArgs: EventArgs
 {
-    public IEntity Entity {get; set; }
+    public string Message {get; set;}
     public Act PathAct {get; set;}
 }
 
@@ -16,6 +16,6 @@ public interface IMoveable
 {
     TileLocation TileLocation {get; set;}
     int TilesPerMove {get; set; }
-    void Move(TileLocation newLocation);
-    void MovePath(Act path);
+    void MoveToNewLocation(TileLocation newLocation);
+    void MoveAlongPath(Act path);
 }

@@ -3,7 +3,6 @@ using CombatPOC.Entities;
 using System.Collections.Generic;
 using CombatPOC.Logic;
 using CombatPOC.UI;
-using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Managers;
 
@@ -11,66 +10,34 @@ namespace CombatPOC.Managers;
 public sealed class TurnManager
 {
     private DamageCalculator _calculator = new();
-    internal static int TurnNum = 0;
-    private TeamEnum TurnTeam = TeamEnum.Enemy;
-    private Resolutions CombatState = Resolutions.Undecided;
+    private BattleState _currentState;
     private Act PlayerAct = null;
-    private readonly Queue<List<Act>> _ActionQueue = new();
-    public readonly List<Combatant> _actors = [];
-    private readonly List<Combatant> _foes = [];
-    private readonly List<Combatant> _friends = [];
+    private List<CombatElement> CombatElements {get => _currentState.CombatElements;}
+    private List<PlayerCombatant> PlayerTeam {get => _currentState.PlayerTeam;}
+    private List<NonPlayerCombatant> EnemyTeam {get => _currentState.EnemyTeam;}
 
     // Constructor
     public TurnManager()
     {
         
     }
-    // Methods
-    public void Reset()
+    // Public Methods
+    public BattleState UpdateState(BattleState state)
     {
-        TurnTeam = TeamEnum.Enemy;
-    }
-    public void AddCombatant(Combatant actor)
-    {
-        _actors.Add(actor);
-        if (actor.Team == TeamEnum.Enemy)
-            _foes.Add(actor);
-        else
-            _friends.Add(actor);
-    }
-    private void GetNonPlayerActs()
-    {
-        BattleState state = GetBattleState();
-        foreach(Combatant combatant in _actors)
+        _currentState = state;
+        if (_currentState.State == Enum.BattleStateEnum.EnemyTeam)
         {
-            if (combatant.Team != TeamEnum.Player)
+            foreach(NonPlayerCombatant npc in EnemyTeam)
             {
-                List<Act> turnAct = combatant.TakeTurn(state);
-                _ActionQueue.Enqueue(turnAct);
+                List<Act> acts = npc.TakeTurn(PlayerTeam);
+                _currentState._AnimationActionQueue.Enqueue((npc, acts));
+                ImplementAction(acts);
             }
+            _currentState.State = Enum.BattleStateEnum.ExecutingEnemyTurn;
         }
-        TurnTeam = TeamEnum.Player;
+        return _currentState;
     }
-    private BattleState GetBattleState()
-    {
-        return new(CombatState, TurnNum, _friends, _foes);
-    }
-    public void Update(GameTime gameTime)
-    {
-        if (TurnTeam != TeamEnum.Player)
-        {
-            GetNonPlayerActs();
-        }
-        else
-        {
-            
-        }
-        if (_ActionQueue.Count >= 1)
-        {
-            List<Act> acts = _ActionQueue.Dequeue();
-            ImplementAction(acts);
-        }
-    }
+    // Private Methods
     private void ImplementAction(List<Act> acts)
     {
         foreach(Act act in acts)
@@ -78,60 +45,31 @@ public sealed class TurnManager
             ImplementAction(act);
         }
     }
-    public void ImplementAction(Act act)
+    private void ImplementAction(Act act)
     {
-        IAction action = act.Action;
-        Combatant actor = act.ActorCombatant;
+        BaseCombatant actor = act.Actor;
         List<TileLocation> locations = act.TilesActedUpon;
-        if (action is MoveAction)
+        if (act is AttackAct)
         {
-            actor.MovePath(act);
-        }
-        if (action is Attack)
-        {
-            actor.DoAttack(act);
-            Combatant[] defenders = GetCombatantsByTiles(locations);
-            foreach(Combatant defender in defenders)
+            CombatElement[] defenders = GetCombatElementsByTiles(locations);
+            foreach(CombatElement defender in defenders)
             {
                 _calculator.DealDamageToDefender(actor, act, defender);
             }
         }
     }
-    public void EnactPlayerAct()
+    private void EnactPlayerAct()
     {
         ImplementAction(PlayerAct);
     }
-    private Combatant[] GetCombatantsByTiles(List<TileLocation> locations)
+    private CombatElement[] GetCombatElementsByTiles(List<TileLocation> locations)
     {
-        List<Combatant> output = [];
-        foreach(Combatant combatant in _actors)
+        List<CombatElement> output = [];
+        foreach(CombatElement combatElement in CombatElements)
         {
-            if (locations.Contains(combatant.TileLocation))
-                output.Add(combatant);
+            if (locations.Contains(combatElement.TileLocation))
+                output.Add(combatElement);
         }
         return [.. output];
-    }
-    public List<IRenderable> GetRenderables()
-    {
-        List<IRenderable> output = [];
-        foreach(Combatant combatant in _actors)
-        {
-            output.Add(combatant);
-        }
-        if (PlayerAct != null)
-        {
-            output.Add(PlayerAct);
-        }
-        return output;
-    }
-    
-    public void SetPlayerAct(Act act)
-    {
-        if (PlayerAct == act) return;
-        PlayerAct = act;
-    }
-    public Act ReturnPlayerAct()
-    {
-        return PlayerAct;
     }
 }

@@ -6,37 +6,10 @@ using static POCLibrary.Core;
 
 namespace CombatPOC.UI;
 
-public class Tile: IHoverable
+public class Tile: ScreenElement
 {
-    private TextureRegion Texture {get; }
-    public Vector2 ScreenPosition {get; set;}
-    public Rectangle _spriteRectangle {get => new((int)ScreenPosition.X, (int)ScreenPosition.Y, Helper.TileWidth, Helper.TileHeight); }
-    public bool Hovered {get; set;} = false;
-    public Tile(TileLocation tileLocation, TextureRegion textureRegion)
+    public Tile(TileLocation tileLocation, TextureRegion textureRegion): base(tileLocation.ToScreenPosition(), textureRegion)
     {
-        ScreenPosition = tileLocation.ToScreenPosition();
-        Texture = textureRegion;
-    }
-    public void OnHover()
-    {
-        if (_spriteRectangle.Contains(Input.Mouse.CurrentState.Position))
-            Hovered = true;
-        else
-            Hovered = false;
-    }
-    public void ClearHover()
-    {
-        Hovered = false;
-    }
-    public void Draw(SpriteBatch spriteBatch)
-    {
-        if (Hovered)
-            Texture.Draw(spriteBatch, ScreenPosition, Color.Green, 0.0f, Vector2.Zero, Helper.Scale, SpriteEffects.None, 1.0f);
-        else
-            Texture.Draw(spriteBatch, ScreenPosition, Color.White, 0.0f, Vector2.Zero, Helper.Scale, SpriteEffects.None, 1.0f);
-    }
-    public void Update()
-    {
-        OnHover();
+        
     }
 }

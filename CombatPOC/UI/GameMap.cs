@@ -9,40 +9,37 @@ using static POCLibrary.Core;
 
 namespace CombatPOC.UI;
 
-public class MapEntity: IEntity, IRenderable
+public class GameMap
 {
-    public int EntityID {get; } = EntityManager.CreateNewEntityID();
     private string TileMapString {get; }
-    private Tilemap _tileMap;
+    public Tilemap TileMap {get; set; }
     private Tile[] _tiles;
-    public List<IComponent> Components {get; } = new();
-    public int MapWidth {get => _tileMap.Columns; }
-    public int MapHeight {get => _tileMap.Rows; }
-    public MapEntity(string tileMapString)
+    public int MapWidth {get => TileMap.Columns; }
+    public int MapHeight {get => TileMap.Rows; }
+    public GameMap(string tileMapString)
     {
         TileMapString = tileMapString;
     }
-    public Tilemap LoadContent()
+    public void LoadContent()
     {
-        _tileMap = Tilemap.FromFile(Content, "images/" + TileMapString);
-        _tileMap.Scale = Helper.Scale;
+        TileMap = Tilemap.FromFile(Content, "images/" + TileMapString);
+        TileMap.Scale = Helper.Scale;
         List<Tile> tiles = [];
-        for(int i = 0; i < _tileMap.Rows; i++)
+        for(int i = 0; i < MapHeight; i++)
         {
-            for(int j = 0; j < _tileMap.Columns; j++)
+            for(int j = 0; j < MapWidth; j++)
             {
                 TileLocation tileLocation = new(j, i);
-                tiles.Add(new(tileLocation, _tileMap.GetTile(j, i)));
+                tiles.Add(new(tileLocation, TileMap.GetTile(j, i)));
             }
         }
         _tiles = [.. tiles];
-        return _tileMap;
     }
     public void Update(GameTime gameTime)
     {
         foreach(Tile tile in _tiles)
         {
-            tile.Update();
+            tile.OnHover();
         }
     }
     public void Draw(SpriteBatch spriteBatch)
@@ -51,9 +48,5 @@ public class MapEntity: IEntity, IRenderable
         {
             tile.Draw(spriteBatch);
         }
-    }
-    public void UpdatePosition(TileLocation newPosition)
-    {
-        
     }
 }

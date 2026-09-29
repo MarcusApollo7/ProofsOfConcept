@@ -4,12 +4,13 @@ using System.Diagnostics;
 using CombatPOC.Entities;
 using CombatPOC.Interfaces;
 using CombatPOC.Logic;
+using CombatPOC.UI;
 
 namespace CombatPOC.Managers;
 
 public class DamageCalculator
 {
-    public void DealDamageToDefender(IAttacker attacker, Act act, IDefender defender)
+    public void DealDamageToDefender(IAttacker attacker, Act act, CombatElement defender)
     {
         if (act.Action is Attack attack)
         {   
@@ -18,7 +19,7 @@ public class DamageCalculator
                 if (defender.TileLocation == act.TilesActedUpon[i])
                 {
                     float dmg = (attacker.AttackRating - defender.DefenseRating) * attack.DmgToTiles[i];
-                    defender.ChangeHealth(dmg);
+                    defender.ChangeHealth(-dmg);
                 }
             }
         }

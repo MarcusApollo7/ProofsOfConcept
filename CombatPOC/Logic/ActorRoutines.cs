@@ -3,59 +3,37 @@ using System.Collections.Generic;
 using CombatPOC.Entities;
 using CombatPOC.Enum;
 using CombatPOC.Interfaces;
+using CombatPOC.Logic.Paths;
 using CombatPOC.Managers;
+using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Logic;
 
 
-public interface IActorRoutine: IComponent
+public interface IActorRoutine
 {
     float BaseActionPoints {get; }
-    // Methods
-    List<Act> TakeTurn(Combatant self, List<Combatant> possibleTargets);
-}
-public class PlayerActor: IActorRoutine
-{
-    public int EntityID {get; }
-    public float BaseActionPoints {get; }= 2;
-    public int ComponentID {get; }
-    public MoveAction Move {get => Actions.Get<MoveAction>(); }
-    public List<Attack> Attacks {get=> Actions.GetAll<Attack>(); }
-    private ActionList Actions = new();
-    private List<Act> _selectedActs = [];
-    // Properties
-    public PlayerActor(int entityID)
-    {
-        EntityID = entityID;
-        Actions.Add(new MoveAction(Constants.PlayerMaxMoves));
-        Actions.Add(new BasicAttack());
-    }
-    public List<Act> TakeTurn(Combatant self, List<Combatant> possibleTargets)
-    {
-        return _selectedActs;
-    }
-    public void SetAct(Act act)
-    {
-        _selectedActs.Add(act);
-    }
-
+    MoveAction Move {get; }
+    List<Act> TakeTurn(List<PlayerCombatant> possibleTargets);
 }
 public class BasicEnemyActor: IActorRoutine
 {
-    public int EntityID {get; }
+    public NonPlayerCombatant _self;
+    public IPathfinder Pathfinder {get=> _self.Pathfinder; }
     public float BaseActionPoints {get; }
-    public int ComponentID {get; } = EntityManager.CreateNewComponentID();
     private ActionList Actions {get; }
-    private MoveAction Move {get => Actions.Get<MoveAction>(); }
-    private List<Attack> Attacks {get=> Actions.GetAll<Attack>(); }
-    public BasicEnemyActor(int maxMoves)
+    public MoveAction Move {get => Actions.Get<MoveAction>(); }
+    public List<Attack> Attacks {get=> Actions.GetAll<Attack>(); }
+    public BasicEnemyActor(NonPlayerCombatant self, int maxMoves)
     {
+        _self = self;
         Actions = new([new MoveAction(maxMoves), new BasicAttack()]);
         BaseActionPoints = 2;
     }
-    private CharacterDirection CheckForTurn(Combatant self, Combatant target)
+    // Methods
+    private CharacterDirection CheckForTurn(BaseCombatant target)
     {
-        return CheckForTurn(self.TileLocation, target.TileLocation);
+        return CheckForTurn(_self.TileLocation, target.TileLocation);
     }
     private CharacterDirection CheckForTurn(TileLocation selfLocation, TileLocation targetLocation)
     {
@@ -78,33 +56,32 @@ public class BasicEnemyActor: IActorRoutine
         else
             return CharacterDirection.Up;
     }
-    // Methods
-    public List<Act> TakeTurn(Combatant self, List<Combatant> possibleTargets)
+    public List<Act> TakeTurn(List<PlayerCombatant> possibleTargets)
     {
         bool moved = false;
         bool attacked = false;
         float usedActionPoints = 0;
         List<Act> outputActs = [];
-        Combatant target = FindTarget(self, possibleTargets);
+        BaseCombatant target = FindTarget(possibleTargets);
         while (usedActionPoints < BaseActionPoints)
         {
-            int targetDistance = (int)CombatManager._pathFinder.DistanceBetween(self, target);
+            int targetDistance = _self.Pathfinder.DistanceBetween(_self, target);
             if (targetDistance == 1 && attacked == false)
             {
-                CharacterDirection directionToTarget = CheckForTurn(self, target);
-                if (self.ActorDirection != directionToTarget)
-                    self.ActorDirection = directionToTarget;
-                outputActs.Add(Attacks[0].Execute(self));
+                CharacterDirection directionToTarget = CheckForTurn(target);
+                if (_self.ActorDirection != directionToTarget)
+                    _self.ActorDirection = directionToTarget;
+                outputActs.Add(Attacks[0].Execute(_self));
                 usedActionPoints += Attacks[0].Cost;
                 attacked = true;
             }
             else if (targetDistance > 1 && moved == false)
             {
-                Move.SetTarget(target);
-                Act moveAct = Move.Execute(self);
+                ;
+                MoveAct moveAct = new(Move, _self, Pathfinder.FindPath(_self, target), Color.Green);
                 outputActs.Add(moveAct);
                 usedActionPoints += Move.Cost;
-                self.TileLocation = moveAct.TilesActedUpon[^1];
+                _self.TileLocation = moveAct.TilesActedUpon[^1];
                 moved = true;
             }
             else
@@ -114,20 +91,19 @@ public class BasicEnemyActor: IActorRoutine
         }
         return outputActs;
     }
-    public Combatant FindTarget(Combatant self, List<Combatant> potentialTargets)
+    private BaseCombatant FindTarget(List<PlayerCombatant> potentialTargets)
     {
-        Combatant closestActor = null;
-        int minCombatantDistance = 10000;
-        foreach(Combatant potentialTarget in potentialTargets)
+        PlayerCombatant closestActor = null;
+        int minCombatantDistance = int.MaxValue;
+        foreach(PlayerCombatant potentialTarget in potentialTargets)
         {
-            int? distance = CombatManager._pathFinder.DistanceBetween(self.TileLocation, potentialTarget.TileLocation);
-            if (distance != null && distance < minCombatantDistance && distance > 0)
+            int distance = _self.Pathfinder.DistanceBetween(_self, potentialTarget);
+            if (distance < minCombatantDistance && distance > 0)
             {
                 closestActor = potentialTarget;
-                minCombatantDistance = (int)distance;
+                minCombatantDistance = distance;
             }
         }
         return closestActor;
     }
-
 }

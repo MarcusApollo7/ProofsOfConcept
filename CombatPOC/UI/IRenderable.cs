@@ -6,5 +6,4 @@ namespace CombatPOC.UI;
 public interface IRenderable
 {
     void Draw(SpriteBatch spriteBatch);
-    void Update(GameTime gameTime);
 }

@@ -1,6 +1,4 @@
-using CombatPOC.Logic;
-
-namespace CombatPOC.Paths;
+namespace CombatPOC.Logic.Paths;
 
 public record Location(int x, int y, bool walkable)
 {

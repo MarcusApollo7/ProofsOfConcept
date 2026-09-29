@@ -6,8 +6,19 @@ using Microsoft.Xna.Framework;
 using CombatPOC.Managers;
 using System;
 using System.Diagnostics;
+using CombatPOC.Logic.Paths;
+using CombatPOC.UI;
 
 namespace CombatPOC.Logic;
+
+// Action Interface
+
+public interface IAction
+{
+    // Properties
+    string ActionName {get; }
+    float Cost {get; }
+}
 
 public class ActionList
 {
@@ -55,42 +66,20 @@ public class MoveAction: IAction
     public string ActionName {get; } = "Move";
     public float Cost {get; } = 1;
     private int _maxMoves;
-    private Combatant targetCombatant;
     private Color MoveColor = Constants.MoveColor;
     public List<ActionEffect> ActionEffects {get; } = [];
     public MoveAction(int maxmoves)
     {
         _maxMoves = maxmoves;
     }
-    public Act GetFullMove(Combatant source)
+    public MoveAct GetFullMove(BaseCombatant source, IPathfinder pathfinder)
     {
-        return GetFullMove(source, source.TileLocation);
+        return GetFullMove(source, source.TileLocation, pathfinder);
     }
-    public Act GetFullMove(Combatant mover, TileLocation origin)
+    public MoveAct GetFullMove(BaseCombatant mover, TileLocation origin, IPathfinder pathfinder)
     {
-
-        List<TileLocation> travelableTiles = CombatManager._pathFinder.FindLocationsWithinDistance(_maxMoves, origin);
-        return new(this, mover, travelableTiles, TurnManager.TurnNum, MoveColor);
-    }
-    public Act Execute(Combatant source)
-    {
-        if (targetCombatant != null)
-        {
-            return MoveToTarget(source, targetCombatant);
-        }
-        else
-        {
-            throw new NullReferenceException("targetCombatant not set to reference");
-        }
-    }
-    private Act MoveToTarget(Combatant source, Combatant target)
-    {
-        List<TileLocation> path = CombatManager._pathFinder.FindPath(source, target);
-        return new(this, source, path[..^1], TurnManager.TurnNum, MoveColor);
-    }
-    public void SetTarget(Combatant target)
-    {
-        targetCombatant = target;
+        List<TileLocation> travelableTiles = pathfinder.FindLocationsWithinDistance(_maxMoves, origin);
+        return new(this, mover, travelableTiles, MoveColor);
     }
 }
 
@@ -103,7 +92,7 @@ public abstract class Attack: IAction
     public abstract List<ActionEffect> ActionEffects {get; }
     public int Count {get => ActionPattern.Count;}
     public float[] DmgToTiles { get=> ActionPattern.DmgModPerTile; }
-    public Act Execute(Combatant source)
+    public AttackAct Execute(BaseCombatant source)
     {
         List<TileLocation> positionsactedupon = [];
         TileLocation positionTile = source.TileLocation;
@@ -112,7 +101,7 @@ public abstract class Attack: IAction
             TileLocation newPos = positionTile+position;
             positionsactedupon.Add(newPos);
         }
-        return new(this, source, positionsactedupon, TurnManager.TurnNum, Constants.AttackColor);
+        return new(this, source, positionsactedupon, Constants.AttackColor);
     }    
 }
 

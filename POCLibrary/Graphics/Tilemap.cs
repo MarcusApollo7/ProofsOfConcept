@@ -75,7 +75,15 @@ public class Tilemap
         else
             return false;
     }
-
+    public string GetTileID(int column, int row)
+    {
+        int index = row * Columns + column;
+        return GetTileID(index);
+    }
+    public string GetTileID(int index)
+    {
+        return _tiles[index].ToString();
+    }
     /// <summary>
     /// Sets the tile at the given index in this tilemap to use the tile from
     /// the tileset at the specified tileset id.

@@ -1,17 +1,18 @@
-using CombatPOC.Paths;
+using CombatPOC.UI;
 using POCLibrary.Graphics;
 
-namespace CombatPOC.Logic;
+namespace CombatPOC.Logic.Paths;
 
-public class Map
+public class MapAStar
 {
-    TileLocation[,] _map;
+    private readonly Location[,] _map;
     public int Xdim {get => _map.GetLength(1); }
     public int Ydim {get => _map.GetLength(0); }
 
-    public Map(Tilemap tilemap)
+    public MapAStar(GameMap gameMap)
     {
-        _map = new TileLocation[tilemap.Rows, tilemap.Columns];
+        Tilemap tilemap = gameMap.TileMap;
+        _map = new Location[tilemap.Rows, tilemap.Columns];
         for (int i = 0; i < tilemap.Rows; i++)
         {
             for (int j = 0; j < tilemap.Columns; j++)
@@ -31,10 +32,10 @@ public class Map
     {
         if (Xdim > x_index && Ydim > y_index && x_index >= 0 && y_index >= 0)
         {
-            TileLocation location = _map[y_index, x_index];
+            Location location = _map[y_index, x_index];
             if (location.Walkable)
             {
-                return Location.TileLocationToLocation(location);
+                return location;
             }
             else
                 return null;

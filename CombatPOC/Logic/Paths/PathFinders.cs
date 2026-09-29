@@ -5,36 +5,36 @@ using POCLibrary.Graphics;
 using CombatPOC.Entities;
 using CombatPOC.Managers;
 using CombatPOC.Logic;
+using CombatPOC.UI;
 
-namespace CombatPOC.Paths;
+namespace CombatPOC.Logic.Paths;
 
 public interface IPathfinder
 {
-    int? DistanceBetween(TileLocation start, TileLocation end);
-    List<TileLocation> FindPath(TileLocation start, TileLocation end);
+    int DistanceBetween(BaseCombatant start, BaseCombatant end);
+    List<TileLocation> FindPath(BaseCombatant start, BaseCombatant end);
     List<TileLocation> FindLocationsWithinDistance(int distance, TileLocation start);
-
 }
 
 public class AStar: IPathfinder
 {
-    public static Map _map;
+    public static MapAStar _map;
     static Location current = null;
     static List<Location> open = [];
     static List<Location> closed = [];
     static int g = 0;
-    public void Initialize(Tilemap tilemap)
+    public AStar(GameMap map)
     {
-        _map = new(tilemap);
+        _map = new(map);
     }
-    public int? DistanceBetween(Combatant source, Combatant target)
+    public int DistanceBetween(BaseCombatant source, BaseCombatant target)
     {
         return DistanceBetween(source.TileLocation, target.TileLocation);
     }
-    public int? DistanceBetween(TileLocation start, TileLocation end)
+    public int DistanceBetween(TileLocation start, TileLocation end)
     {
         List<TileLocation> path = FindPath(start, end);
-        int? output = null;
+        int output = int.MaxValue;
         if (path != null)
         {
             output = path.Count - 1;
@@ -43,9 +43,9 @@ public class AStar: IPathfinder
         }
         return output;
     }
-    public List<TileLocation> FindPath(Combatant source, Combatant target)
+    public List<TileLocation> FindPath(BaseCombatant source, BaseCombatant target)
     {
-        return FindPath(source.TileLocation, target.TileLocation);
+        return FindPath(source.TileLocation, target.TileLocation)[..^1];
     }
     public List<TileLocation> FindPath(TileLocation Start, TileLocation target)
     {
@@ -91,9 +91,9 @@ public class AStar: IPathfinder
         ResetPathFinder();
         return null;
     }
-    public List<TileLocation> FindLocationsWithinDistance(int distance, Combatant combatant)
+    public List<TileLocation> FindLocationsWithinDistance(int distance, BaseCombatant BaseCombatant)
     {
-        return FindLocationsWithinDistance(distance, combatant.TileLocation);
+        return FindLocationsWithinDistance(distance, BaseCombatant.TileLocation);
     }
     public List<TileLocation> FindLocationsWithinDistance(int distance, TileLocation start)
     {
@@ -111,7 +111,7 @@ public class AStar: IPathfinder
                 visitedLocations.Add(currentLocation);
             foreach(TileLocation tile in GetAdjacentTiles(currentLocation))
             {
-                if (CombatManager._pathFinder.DistanceBetween(start, tile) <= distance && !visitedLocations.Contains(tile))
+                if (DistanceBetween(start, tile) <= distance && !visitedLocations.Contains(tile))
                 {
                     searchQueue.Enqueue(tile);
                 }
@@ -150,10 +150,6 @@ public class AStar: IPathfinder
         open = [];
         closed = [];
         g = 0;
-    }
-    public void ResetMap(Tilemap newTileMap)
-    {
-        _map = new(newTileMap);
     }
     public Location ConvertTileLocationToLocation(TileLocation location)
     {
