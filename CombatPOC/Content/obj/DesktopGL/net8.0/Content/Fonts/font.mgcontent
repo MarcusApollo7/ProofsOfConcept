@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/ccwar/OneDrive/Documents/unborn_queen_rpg/ProofsOfConcept/CombatPOC/Content/fonts/font.spritefont</SourceFile>
+  <SourceTime>2026-09-29T11:03:16.6218525-07:00</SourceTime>
+  <DestFile>C:/Users/ccwar/OneDrive/Documents/unborn_queen_rpg/ProofsOfConcept/CombatPOC/Content/bin/DesktopGL/Content/fonts/font.xnb</DestFile>
+  <DestTime>2026-09-29T11:03:23.38398-07:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2025-06-02T03:31:02-07:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2025-06-02T03:31:02-07:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
