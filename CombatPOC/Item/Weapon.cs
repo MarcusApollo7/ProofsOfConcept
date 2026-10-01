@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using CombatPOC.Entities;
 using CombatPOC.Logic;
-using CombatPOC.Managers;
 
 namespace CombatPOC.Item;
 
@@ -19,9 +17,5 @@ public class Weapon: ItemBase, IWeapon
     public Weapon()
     {
         WeaponStats = Constants.BasicSwordStats;
-    }
-    public void Equip()
-    {
-        
     }
 }

@@ -8,7 +8,7 @@ namespace CombatPOC;
 public class CombatPOC : Core
 {
     private CombatManager _combatManager = new();
-    private GameUIManager _UIManger = new();
+    private GameUIManager _UIManager;
     public CombatPOC() : base("CombatPOC", 1280, 720, false)
     {
         
@@ -18,6 +18,10 @@ public class CombatPOC : Core
     {
         // Init Base Class
         base.Initialize();
+        _UIManager = new(this);
+
+        // Init GumService
+        
     }
     protected override void LoadContent()
     {
@@ -30,6 +34,7 @@ public class CombatPOC : Core
         // TODO: Add your update logic here
         base.Update(gameTime);
         _combatManager.Update(gameTime);
+        _UIManager.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -42,7 +47,8 @@ public class CombatPOC : Core
         _combatManager.Draw(SpriteBatch);
         // Always end the sprite batch when finished.
         SpriteBatch.End();
-    }
-
-    
+        
+        
+        _UIManager.Draw();
+    }   
 }

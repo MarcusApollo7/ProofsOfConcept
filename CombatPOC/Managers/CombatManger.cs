@@ -41,8 +41,7 @@ public class CombatManager
             Attacks = [new BasicAttack(), new SwordHeavyAttack()]
         };
         BaseCombatant enemy1 = new BasicEnemy("bat-animation", atlasString, 15, 7.5f, 7.5f, 7.5f, 7.5f, new(4, 4), pathfinder);
-        TextBox testBox = new(new(0, 0), "Hello Gamers!", _CombatUI.Font);
-        _currentState = new([hero1, enemy1, testBox])
+        _currentState = new([hero1, enemy1])
         {
             map = map
         };
