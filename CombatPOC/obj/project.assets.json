@@ -2,6 +2,22 @@
   "version": 4,
   "targets": {
     "net8.0": {
+      "BrotliSharpLib/0.3.3": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.5.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/BrotliSharpLib.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/BrotliSharpLib.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "CsvHelper/33.1.0": {
         "type": "package",
         "compile": {
@@ -15,11 +31,13 @@
           }
         }
       },
-      "FlatRedBall.GumCommon/2026.5.8.1": {
+      "FlatRedBall.GumCommon/2026.10.1.1": {
         "type": "package",
         "dependencies": {
+          "BrotliSharpLib": "0.3.3",
           "CsvHelper": "33.1.0",
           "FlatRedBall.InterpolationCore": "2025.4.22.1",
+          "SharpCompress": "0.48.0",
           "System.Numerics.Vectors": "4.5.0"
         },
         "compile": {
@@ -57,10 +75,10 @@
           }
         }
       },
-      "Gum.MonoGame/2026.5.8.1": {
+      "Gum.MonoGame/2026.10.1.1": {
         "type": "package",
         "dependencies": {
-          "FlatRedBall.GumCommon": "2026.5.8.1",
+          "FlatRedBall.GumCommon": "2026.10.1.1",
           "TextCopy": "6.2.1"
         },
         "compile": {
@@ -72,6 +90,9 @@
           "lib/net8.0/MonoGameGum.dll": {
             "related": ".xml"
           }
+        },
+        "build": {
+          "buildTransitive/Gum.MonoGame.targets": {}
         }
       },
       "Microsoft.CSharp/4.7.0": {
@@ -222,6 +243,15 @@
           }
         }
       },
+      "SharpCompress/0.48.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/SharpCompress.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/SharpCompress.dll": {}
+        }
+      },
       "System.Data.DataSetExtensions/4.5.0": {
         "type": "package",
         "compile": {
@@ -247,6 +277,19 @@
         },
         "runtime": {
           "lib/netcoreapp2.0/_._": {}
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/4.5.2": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.ValueTuple/4.5.0": {
@@ -277,6 +320,9 @@
       "POCLibrary/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Gum.MonoGame": "2026.10.1.1"
+        },
         "compile": {
           "bin/placeholder/POCLibrary.dll": {}
         },
@@ -287,6 +333,33 @@
     }
   },
   "libraries": {
+    "BrotliSharpLib/0.3.3": {
+      "sha512": "/z74VNg6etlQK/N1mSD5Tz2qQUZqc3RMiuv2F8Q/MOfvg4l7a6lDYhQQTPd9s9saSokh1GqUD7JTuunOiQid8w==",
+      "type": "package",
+      "path": "brotlisharplib/0.3.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "brotlisharplib.0.3.3.nupkg.sha512",
+        "brotlisharplib.nuspec",
+        "lib/net20/BrotliSharpLib.dll",
+        "lib/net20/BrotliSharpLib.xml",
+        "lib/net35/BrotliSharpLib.dll",
+        "lib/net35/BrotliSharpLib.xml",
+        "lib/net40/BrotliSharpLib.dll",
+        "lib/net40/BrotliSharpLib.xml",
+        "lib/net45/BrotliSharpLib.dll",
+        "lib/net45/BrotliSharpLib.xml",
+        "lib/net451/BrotliSharpLib.dll",
+        "lib/net451/BrotliSharpLib.xml",
+        "lib/netstandard1.1/BrotliSharpLib.dll",
+        "lib/netstandard1.1/BrotliSharpLib.xml",
+        "lib/netstandard1.3/BrotliSharpLib.dll",
+        "lib/netstandard1.3/BrotliSharpLib.xml",
+        "lib/netstandard2.0/BrotliSharpLib.dll",
+        "lib/netstandard2.0/BrotliSharpLib.xml"
+      ]
+    },
     "CsvHelper/33.1.0": {
       "sha512": "kqfTOZGrn7NarNeXgjh86JcpTHUoeQDMB8t9NVa/ZtlSYiV1rxfRnQ49WaJsob4AiGrbK0XDzpyKkBwai4F8eg==",
       "type": "package",
@@ -313,17 +386,19 @@
         "lib/netstandard2.1/CsvHelper.xml"
       ]
     },
-    "FlatRedBall.GumCommon/2026.5.8.1": {
-      "sha512": "T6DQG/dto/2mTLh9BU81ilxs+SU4H49JZPoPIdjIU7C+++WQjvlkaB2LeRHlHhGM6WvYnt9zf6rvvW4Oe+UJ1w==",
+    "FlatRedBall.GumCommon/2026.10.1.1": {
+      "sha512": "BNjbYjLEHpGjpF9RGBaYb7yjhfynWPb/VtpYqxMT8eVk2+vFIe7sxcnI+GiIoJlBPn5VaDRVL1CVsv7M35acJg==",
       "type": "package",
-      "path": "flatredball.gumcommon/2026.5.8.1",
+      "path": "flatredball.gumcommon/2026.10.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "flatredball.gumcommon.2026.5.8.1.nupkg.sha512",
+        "flatredball.gumcommon.2026.10.1.1.nupkg.sha512",
         "flatredball.gumcommon.nuspec",
         "lib/net8.0/GumCommon.dll",
-        "lib/net8.0/GumCommon.xml"
+        "lib/net8.0/GumCommon.xml",
+        "lib/netstandard2.1/GumCommon.dll",
+        "lib/netstandard2.1/GumCommon.xml"
       ]
     },
     "FlatRedBall.InterpolationCore/2025.4.22.1": {
@@ -341,14 +416,17 @@
         "lib/netstandard2.0/FlatRedBall.InterpolationCore.xml"
       ]
     },
-    "Gum.MonoGame/2026.5.8.1": {
-      "sha512": "1AeUslKNxpbpuT8l9P89uNPkSi/rLnsmbjYjlzbaFNMN1o7P2A/+qGnZSAlcJQ0oQ31ryo2cHrzsqqCoAMwtLg==",
+    "Gum.MonoGame/2026.10.1.1": {
+      "sha512": "Bqj3/pHACdz4TaYJ016713rTX6Xgclt4uxsUIa0QCI/OLjcf7o7geMWlzoiEEDs7Z43Y90RPaEeCoNkZBMTbdw==",
       "type": "package",
-      "path": "gum.monogame/2026.5.8.1",
+      "path": "gum.monogame/2026.10.1.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "gum.monogame.2026.5.8.1.nupkg.sha512",
+        "analyzers/dotnet/cs/Gum.Analyzers.dll",
+        "buildTransitive/AssemblyNameCollisionGuard.targets",
+        "buildTransitive/Gum.MonoGame.targets",
+        "gum.monogame.2026.10.1.1.nupkg.sha512",
         "gum.monogame.nuspec",
         "lib/net8.0/MonoGameGum.dll",
         "lib/net8.0/MonoGameGum.xml",
@@ -547,6 +625,27 @@
         "nvorbis.nuspec"
       ]
     },
+    "SharpCompress/0.48.0": {
+      "sha512": "6k0Sa9gf85Sz9Npy7jnn5UPerejrAa3FxU9Gq5T6PwFWHUhUIdF903TjPiJtrYjXFJsXbnccaWSNMHzEg27DwQ==",
+      "type": "package",
+      "path": "sharpcompress/0.48.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net10.0/SharpCompress.dll",
+        "lib/net48/SharpCompress.dll",
+        "lib/net5.0/SharpCompress.dll",
+        "lib/net6.0/SharpCompress.dll",
+        "lib/net7.0/SharpCompress.dll",
+        "lib/net8.0/SharpCompress.dll",
+        "lib/net9.0/SharpCompress.dll",
+        "lib/netstandard2.0/SharpCompress.dll",
+        "lib/netstandard2.1/SharpCompress.dll",
+        "sharpcompress.0.48.0.nupkg.sha512",
+        "sharpcompress.nuspec"
+      ]
+    },
     "System.Data.DataSetExtensions/4.5.0": {
       "sha512": "221clPs1445HkTBZPL+K9sDBdJRB8UN8rgjO3ztB0CQ26z//fmJXtlsr6whGatscsKGBrhJl5bwJuKSA8mwFOw==",
       "type": "package",
@@ -634,6 +733,31 @@
         "version.txt"
       ]
     },
+    "System.Runtime.CompilerServices.Unsafe/4.5.2": {
+      "sha512": "wprSFgext8cwqymChhrBLu62LMg/1u92bU+VOwyfBimSPVFXtsNqEWC92Pf9ofzJFlk4IHmJA75EDJn1b2goAQ==",
+      "type": "package",
+      "path": "system.runtime.compilerservices.unsafe/4.5.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
     "System.ValueTuple/4.5.0": {
       "sha512": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ==",
       "type": "package",
@@ -710,7 +834,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Gum.MonoGame >= 2026.5.8.1",
+      "Gum.MonoGame >= 2026.10.1.1",
       "MonoGame.Content.Builder.Task >= 3.8.*",
       "MonoGame.Framework.DesktopGL >= 3.8.*",
       "POCLibrary >= 1.0.0"
@@ -776,7 +900,7 @@
         "dependencies": {
           "Gum.MonoGame": {
             "target": "Package",
-            "version": "[2026.5.8.1, )"
+            "version": "[2026.10.1.1, )"
           },
           "MonoGame.Content.Builder.Task": {
             "target": "Package",

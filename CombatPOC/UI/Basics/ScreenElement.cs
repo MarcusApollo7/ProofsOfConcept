@@ -1,10 +1,6 @@
-using System;
-using CombatPOC.Logic;
-using CombatPOC.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using POCLibrary.Graphics;
-using POCLibrary.Input;
 using static POCLibrary.Core;
 
 namespace CombatPOC.UI.Basics;
@@ -23,6 +19,10 @@ public abstract class ScreenElement: IScreenElement
     public string SpriteName {get; set; }
     public Sprite Sprite {get; }
     public virtual Rectangle SpriteRectangle {get => new((int)ScreenPosition.X, (int)ScreenPosition.Y, Helper.TileWidth, Helper.TileHeight ); }
+    public ScreenElement()
+    {
+        Sprite = new();
+    }
     public ScreenElement(Vector2 position, string name, string atlasName)
     {
         ScreenPosition = position;
@@ -54,6 +54,8 @@ public abstract class ScreenElement: IScreenElement
     {
         OnHover();
     }
-    public abstract void OnHover();
-    
+    public virtual void OnHover()
+    {
+        
+    }
 }

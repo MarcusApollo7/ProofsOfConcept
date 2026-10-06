@@ -5,11 +5,9 @@ using POCLibrary.Input;
 using CombatPOC.Enum;
 using Microsoft.Xna.Framework;
 using CombatPOC.Logic;
-using System;
 using System.Linq;
 using CombatPOC.UI;
 using CombatPOC.Classes;
-using System.Diagnostics;
 
 namespace CombatPOC.Managers;
 
@@ -25,44 +23,17 @@ public class InputHandler
         _currentState = state;
         if (_currentState.State == BattleStateEnum.WaitingForInput)
         {
-            Random random = new();
-            if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
-            {
-                // Readd ability to jump enemy to random spot
-            }
             CheckPlayerInput();
-            if (SelectedElement is PlayerCombatant combatant && Input.Mouse.IsButtonDown(MouseButton.Left) && SelectedAct != null)
-            {
-                Vector2 end = combatant.TileLocation.GetCenter();
-                Vector2 origin = Input.Mouse.Position.ToVector2();
-                Vector2 normDirection = (end - origin)/(end-origin).Length();
-
-                TileLocation tile = Helper.TraverseTiles2D(
-                    origin, 
-                    normDirection, 
-                    state.map.MapWidth, 
-                    state.map.MapHeight, 
-                    visit: tile =>
-                    {
-                        // Check if this tile is in the list
-                        bool isBlocked = SelectedAct.TilesActedUpon.Any(t => t.X == tile.X && t.Y == tile.Y);
-
-                        return isBlocked; // stop traversal if blocked
-                    });
-                combatant.MoveToNewLocation(tile);
-            } 
+            EndPlayerTurn();
         }
         if (Input.Mouse.WasButtonJustPressed(MouseButton.Right))
         {
-            SelectedElement = null;
-            SelectedAct = null;
-            PlayerActionPrimed = false;
+            DeselectElement();
         }
         return _currentState;
     }
     public void SubscribeToSelect(CombatElement sender, SelectEventArgs e)
     {
-        Debug.WriteLine(e.Message);
         SelectedElement = sender;
         if (SelectedElement is BaseCombatant combatant)
         {
@@ -73,10 +44,10 @@ public class InputHandler
     {
         if (SelectedElement is PlayerCombatant player)
         {
-            Debug.WriteLine("Checking Player Input");
             TurnCharacter(player);
             ChooseAttack(player);
             ConfirmAction(player);
+            MovePlayer(player);
         }
     }
     private void TurnCharacter(BaseCombatant combatant)
@@ -138,10 +109,48 @@ public class InputHandler
         {
             _currentState.SelectedActConfirmed = true;
             PlayerActionPrimed = false;
-            SelectedAct = null;
-            SelectedElement = null;
             combatant.Attacked = true;
-            return;
         }          
+    }
+    private void MovePlayer(PlayerCombatant combatant)
+    {
+        if (Input.Mouse.IsButtonDown(MouseButton.Left) && SelectedAct is MoveAct moveAct && combatant.Moved == false)
+        {
+            Vector2 end = combatant.TileLocation.GetCenter();
+            Vector2 origin = Input.Mouse.Position.ToVector2();
+            Vector2 direction = end - origin;
+
+            TileLocation tile = Helper.TraverseTiles2D(
+                origin, 
+                direction, 
+                CombatPOC.MapColumns, 
+                CombatPOC.MapRows, 
+                visit: tile => moveAct.TilesActedUpon.Any(t => t.X == tile.X && t.Y == tile.Y));
+            combatant.MovePhantomToNewLocation(tile);
+
+        } 
+        if (Input.Mouse.WasButtonJustReleased(MouseButton.Left) && SelectedAct is MoveAct && combatant.Moved == false)
+        {
+            TileLocation newPos = Helper.ConvertScreenPositionToTileLocation(combatant.Phantom.ScreenPosition);
+            combatant.MoveToNewLocation(newPos);
+            combatant.Moved = true;
+        }
+    }
+    private void DeselectElement()
+    {
+        SelectedElement = null;
+        SelectedAct = null;
+        PlayerActionPrimed = false;
+    }
+    private void EndPlayerTurn()
+    {
+        if (Input.Keyboard.WasKeyJustPressed(Keys.Space) && _currentState.State == BattleStateEnum.WaitingForInput)
+        {
+            _currentState.State = BattleStateEnum.EnemyTeam;
+            foreach(PlayerCombatant playerCombatant in _currentState.PlayerTeam)
+            {
+                playerCombatant.ResetTurn();
+            }
+        }
     }
 }

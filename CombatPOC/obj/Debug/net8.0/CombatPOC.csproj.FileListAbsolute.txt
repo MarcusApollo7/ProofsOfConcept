@@ -49,3 +49,5 @@ C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\MonoGameGum.dll
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\TextCopy.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\BrotliSharpLib.dll
+C:\Users\ccwar\OneDrive\Documents\unborn_queen_rpg\ProofsOfConcept\CombatPOC\bin\Debug\net8.0\SharpCompress.dll

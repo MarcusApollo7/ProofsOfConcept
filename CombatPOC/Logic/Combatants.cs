@@ -1,6 +1,5 @@
 using CombatPOC.Interfaces;
 using CombatPOC.Enum;
-using CombatPOC.Logic;
 using System.Collections.Generic;
 using System;
 using CombatPOC.stats_skills;
@@ -12,6 +11,8 @@ using CombatPOC.Logic.Paths;
 using Microsoft.Xna.Framework;
 using POCLibrary.Graphics;
 using static POCLibrary.Core;
+using Microsoft.Xna.Framework.Graphics;
+using CombatPOC.UI.Basics;
 
 namespace CombatPOC.Logic;
 
@@ -80,6 +81,8 @@ public abstract class BaseCombatant: CombatElement, IAttacker, IAnimatable
     public int TilesPerMove {get; set; }
     public abstract MoveAction Move {get; }
     internal IPathfinder Pathfinder {get; }
+    public PhantomElement Phantom {get; }
+    public ConnectionLine PhantomLine {get; }
     public BaseCombatant(string SpriteName, string atlasName, float health, float str, float dex, float eva, float tgh, TileLocation tileLocation, IPathfinder pathfinder): base(SpriteName, atlasName, health, tileLocation)
     {
         Str = new(str, Constants.Str);
@@ -87,42 +90,13 @@ public abstract class BaseCombatant: CombatElement, IAttacker, IAnimatable
         Eva = new(eva);
         Tgh = new(tgh);
         Pathfinder = pathfinder;
+        Phantom = new(tileLocation, SpriteName, atlasName);
+        PhantomLine = new(5, Color.Black);
     }
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
         AnimatedSprite.Update(gameTime);
-    }
-    public MoveAct GetFullMove()
-    {
-        var result = new List<TileLocation>();
-        var visited = new List<TileLocation>();
-        var queue = new Queue<(TileLocation pos, int dist)>();
-
-        // Start BFS
-        queue.Enqueue((TileLocation, 0));
-        visited.Add(TileLocation);
-        result.Add(TileLocation);
-
-        // Directions: up, down, left, right
-        int[,] directions = { { 0, 1 }, { 0, -1 }, { -1, 0 }, { 1, 0 } };
-
-        while (queue.Count > 0)
-        {
-            var (current, dist) = queue.Dequeue();
-            result.Add(current);
-
-            if (dist > TilesPerMove) continue;
-
-            for (int i = 0; i < 4; i++)
-            {
-                int nx = current.X + directions[i, 0];
-                int ny = current.Y + directions[i, 1];
-
-            }
-        }
-
-        return new(Move, this, result, Color.Green);
     }
     public override void OnHover()
     {
@@ -131,6 +105,46 @@ public abstract class BaseCombatant: CombatElement, IAttacker, IAnimatable
         else
             Sprite.Color = Color.White;
     }
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        if (Phantom.TileLocation.X != TileLocation.X || Phantom.TileLocation.Y != TileLocation.Y)
+        {
+            PhantomLine.Draw(spriteBatch);
+            Phantom.Draw(spriteBatch);
+        }
+        base.Draw(spriteBatch);
+    }
+    public void MoveToNewLocation(TileLocation newTileLocation)
+    {
+        if (newTileLocation != null)
+        {
+            TileLocation = newTileLocation;
+            ScreenPosition = newTileLocation.ToScreenPosition();
+            MovePhantomToNewLocation(newTileLocation);
+        }
+    }
+    public void MovePhantomToNewLocation(TileLocation newTileLocation)
+    {
+        if (newTileLocation != null)
+        {
+            Phantom.TileLocation = newTileLocation;
+            Phantom.ScreenPosition = newTileLocation.ToScreenPosition();
+            List<TileLocation> path = Pathfinder.FindPath(TileLocation, newTileLocation);
+            PhantomLine.SetSegments(path);
+        }
+    }
+    public void Equip(ItemBase item, EquipableLocation location)
+    {
+        if (Equipped[location] == null)
+        {
+            Equipped[location] = item;
+        }
+        else
+        {
+            Inventory.AddItem(Equipped[location]);
+            Equipped[location] = item;
+        }
+    }
 }
 
 public class PlayerCombatant: BaseCombatant
@@ -138,12 +152,17 @@ public class PlayerCombatant: BaseCombatant
     public List<Attack> Attacks {get; }
     public override MoveAction Move { get; }
     public bool Moved {get; set; }= false;
-    public bool Attacked {get; set; }= false;
+    public bool Attacked {get; set; } = false;
     public PlayerCombatant(string SpriteName, string atlasName, float health, float str, float dex, float eva, float tgh, TileLocation tileLocation, IPathfinder pathfinder): base(SpriteName, atlasName, health, str, dex, eva, tgh, tileLocation, pathfinder)
     {
         Team = TeamEnum.Player;
         Attacks = [new BasicAttack(), new SwordHeavyAttack()];
         Move = new MoveAction(Constants.PlayerMaxMoves);
+    }
+    public void ResetTurn()
+    {
+        Moved = false;
+        Attacked = false;
     }
 }
 

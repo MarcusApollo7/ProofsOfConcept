@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using CombatPOC.Entities;
 using CombatPOC.Enum;
-using CombatPOC.Interfaces;
 using CombatPOC.Logic.Paths;
-using CombatPOC.Managers;
 using Microsoft.Xna.Framework;
 
 namespace CombatPOC.Logic;

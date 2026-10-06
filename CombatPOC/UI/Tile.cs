@@ -6,11 +6,13 @@ using static POCLibrary.Core;
 
 namespace CombatPOC.UI;
 
-public partial class Tile: ScreenElement
+public class Tile: ScreenElement
 {
+    public TileLocation TileLocation {get; }
     public Tile(TileLocation tileLocation, TextureRegion textureRegion): base(tileLocation.ToScreenPosition(), textureRegion)
     {
-        
+        Sprite.LayerDepth = Constants.MapDepth;
+        TileLocation = tileLocation;
     }
     public override void OnHover()
     {

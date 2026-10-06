@@ -7,12 +7,11 @@ using CombatPOC.UI;
 using CombatPOC.Enum;
 using CombatPOC.UI.Animation;
 using System;
-using System.Linq;
-using System.Diagnostics;
+using CombatPOC.UI.Basics;
 
 namespace CombatPOC.Entities;
 
-public abstract record class Act: IRenderable
+public abstract class Act: ScreenElement
 { 
     public Timer _animationTimer;
     public readonly int TurnNum;
@@ -20,32 +19,43 @@ public abstract record class Act: IRenderable
     public BaseCombatant Actor {get; }
     public List<TileLocation> TilesActedUpon {get; set;}
     private Color ActColor;
-    private readonly Rectangle[] _rectangles;
-    public int TileNumber {get => _rectangles.Length; }
+    private Rectangle[] _rectangles;
+    public int TileNumber {get => TilesActedUpon.Count; }
     public Act(IAction action, BaseCombatant actorcombatant, List<TileLocation> positionsactedupon, Color color)
     {
         Action = action;
         Actor = actorcombatant;
         TilesActedUpon = positionsactedupon;
         _rectangles = new Rectangle[positionsactedupon.Count];
-        for(int i = 0; i < positionsactedupon.Count; i++)
-        {
-            _rectangles[i] = new(positionsactedupon[i].X * Helper.TileWidth, positionsactedupon[i].Y * Helper.TileHeight, Helper.TileWidth, Helper.TileHeight);
-        }
+        UpdateRectangles();
         ActColor = color;
     }
     public void UpdateRectangles()
     {
+        if (_rectangles.Length != TilesActedUpon.Count)
+            _rectangles = new Rectangle[TilesActedUpon.Count];
+
         for(int i = 0; i < TileNumber; i++)
         {
-            _rectangles[i] = new(TilesActedUpon[i].X * Helper.TileWidth, TilesActedUpon[i].Y * Helper.TileHeight, Helper.TileWidth, Helper.TileHeight);
+            float left = TilesActedUpon[i].X * Helper.RenderedTileWidth;
+            float top = TilesActedUpon[i].Y * Helper.RenderedTileHeight;
+            float right = (TilesActedUpon[i].X + 1) * Helper.RenderedTileWidth;
+            float bottom = (TilesActedUpon[i].Y + 1) * Helper.RenderedTileHeight;
+            int x = (int)MathF.Floor(left);
+            int y = (int)MathF.Floor(top);
+            _rectangles[i] = new(
+                x,
+                y,
+                (int)MathF.Ceiling(right) - x,
+                (int)MathF.Ceiling(bottom) - y);
         }
     }
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
     {
+        UpdateRectangles();
         for(int i = 0; i < TileNumber; i++)
         {
-            spriteBatch.Draw(CombatManager._CombatUI._whiteRectangle, _rectangles[i], ActColor * 0.4f);
+            spriteBatch.Draw(CombatManager._CombatUI._whiteRectangle, _rectangles[i], null, ActColor * 0.4f, 0f, new(0, 0), SpriteEffects.None, Constants.ActDepth);
         }
     }
     public void StartAnimationTimer()
@@ -53,22 +63,9 @@ public abstract record class Act: IRenderable
         _animationTimer.Start();
     }
     public abstract bool Animate(IAnimatable animatable, GameTime gameTime);
-    public virtual bool Equals(Act other)
-    {
-        if (other == null) return false;
-        if (EqualityContract != other.EqualityContract) return false;
-        return Action == other.Action
-            && Actor == other.Actor
-            && TilesActedUpon == other.TilesActedUpon
-            && TurnNum == other.TurnNum;
-    }
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
 }
 
-public record class MoveAct: Act
+public class MoveAct: Act
 {
     public MoveAction Move {get; set;}
     public MoveAct(IAction action, BaseCombatant actorcombatant, List<TileLocation> positionsactedupon, Color color): base(action, actorcombatant, positionsactedupon, color)
@@ -100,7 +97,7 @@ public record class MoveAct: Act
     }
 }
 
-public record class AttackAct: Act
+public class AttackAct: Act
 {
     public Attack Attack {get; set;}
     public AttackAct(IAction action, BaseCombatant actorcombatant, List<TileLocation> positionsactedupon, Color color): base(action, actorcombatant, positionsactedupon, color)

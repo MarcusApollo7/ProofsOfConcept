@@ -1,10 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using POCLibrary.Graphics;
-using CombatPOC.Entities;
-using CombatPOC.Managers;
-using CombatPOC.Logic;
 using CombatPOC.UI;
 
 namespace CombatPOC.Logic.Paths;
@@ -13,6 +9,7 @@ public interface IPathfinder
 {
     int DistanceBetween(BaseCombatant start, BaseCombatant end);
     List<TileLocation> FindPath(BaseCombatant start, BaseCombatant end);
+    List<TileLocation> FindPath(TileLocation start, TileLocation end);
     List<TileLocation> FindLocationsWithinDistance(int distance, TileLocation start);
 }
 

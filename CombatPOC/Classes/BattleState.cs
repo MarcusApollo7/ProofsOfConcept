@@ -72,7 +72,7 @@ public class BattleState
     {
         get
         {
-            if (_selectedActConfirmed == null || !_selectedActConfirmed == false)
+            if (_selectedActConfirmed == null || _selectedActConfirmed == false)
                 return false;
             else
                 return true;
@@ -97,5 +97,21 @@ public class BattleState
     public BattleState(List<ScreenElement> elements): this()
     {
         ScreenElements = elements;
+    }
+    public void AddMap(GameMap map)
+    {
+        ScreenElements.AddRange(map.Tiles);
+    }
+    public void AddCombatant(BaseCombatant combatant)
+    {
+        ScreenElements.Add(combatant);
+    }
+    public void AddScreenElement(List<ScreenElement> screenElements)
+    {
+        ScreenElements.AddRange(screenElements);
+    }
+    public void AddScreenElement(ScreenElement screenElement)
+    {
+        ScreenElements.Add(screenElement);
     }
 }

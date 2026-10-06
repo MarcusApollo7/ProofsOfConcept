@@ -2,5 +2,6 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.5.1\build\MonoGame.Framework.DesktopGL.targets" Condition="Exists('$(NuGetPackageRoot)monogame.framework.desktopgl\3.8.5.1\build\MonoGame.Framework.DesktopGL.targets')" />
+    <Import Project="$(NuGetPackageRoot)gum.monogame\2026.10.1.1\buildTransitive\Gum.MonoGame.targets" Condition="Exists('$(NuGetPackageRoot)gum.monogame\2026.10.1.1\buildTransitive\Gum.MonoGame.targets')" />
   </ImportGroup>
 </Project>

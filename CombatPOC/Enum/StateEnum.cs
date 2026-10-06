@@ -5,6 +5,5 @@ public enum BattleStateEnum
     EnemyTeam,
     ExecutingEnemyTurn,
     WaitingForInput,
-    ExecutingPlayerTurn,
     BattleOver
 }

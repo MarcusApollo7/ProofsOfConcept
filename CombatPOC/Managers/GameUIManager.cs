@@ -1,31 +1,62 @@
-
-using Gum.Forms;
-using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
-using MonoGameGum;
+using Gum.GueDeriving;
+
 
 namespace CombatPOC.Managers;
 
 public class GameUIManager
 {
-    GumService GumUI => GumService.Default;
-
+    Gum.GumService GumUI => Gum.GumService.Default;
+    public ContainerRuntime SideBar { get; protected set; }
+    public ContainerRuntime BottomBar { get; protected set; }
+    public ContainerRuntime WorldScreen { get; protected set; }
+    public TextRuntime SideBarText { get; protected set; }
     public GameUIManager(Game game)
     {
-        GumService.Default.Initialize(game);
-        var mainPanel = new StackPanel();
-        mainPanel.AddToRoot();
-        var button = new Button();
-        // Adds the button as a child so that it is drawn and has its
-        // events raised
-        mainPanel.AddChild(button);
-        // Initial button text before being clicked
-        button.Text = "Click Me";
-        // Makes the button wider so the text fits
-        button.Width = 350;
-        // Click event can be handled with a lambda
-        button.Click += (_, _) =>
-            button.Text = $"Clicked at {System.DateTime.Now}";
+        GumUI.Initialize(game);
+        GumUI.EnableZoomToWindow();
+        WorldScreen = new ContainerRuntime
+        {
+            Name = "WorldScreen",
+            Height = 70f,
+            HeightUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent,
+            Width = 70f,
+            WidthUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent
+        };
+        WorldScreen.AddToRoot();
+        SideBar = new ContainerRuntime
+        {
+            Name = "SideBar",
+            Height = 70f,
+            HeightUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent,
+            Width = 30f,
+            WidthUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent,
+            X = 0f,
+            XOrigin = RenderingLibrary.Graphics.HorizontalAlignment.Right,
+            XUnits = Gum.Converters.GeneralUnitType.PixelsFromLarge,
+            Y = 0f
+        };
+        SideBar.AddToRoot();
+        SideBarText = new TextRuntime
+        {
+            Name = "SideBarText",
+            Text = @"Hello, this is the side bar.",
+            Color = Color.Black
+        };
+        SideBar.AddChild(SideBarText);
+        BottomBar = new ContainerRuntime
+        {
+            Name = "BottomBar",
+            Height = 30f,
+            HeightUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent,
+            Width = 100f,
+            WidthUnits = Gum.DataTypes.DimensionUnitType.PercentageOfParent,
+            X = 0f,
+            Y = 0f,
+            YOrigin = RenderingLibrary.Graphics.VerticalAlignment.Bottom,
+            YUnits = Gum.Converters.GeneralUnitType.PixelsFromLarge
+        };
+        BottomBar.AddToRoot();
     }
     public void Update(GameTime gameTime)
     {

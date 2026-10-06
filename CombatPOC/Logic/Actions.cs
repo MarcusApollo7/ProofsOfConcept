@@ -3,11 +3,8 @@ using CombatPOC.Enum;
 using CombatPOC.Interfaces;
 using CombatPOC.Entities;
 using Microsoft.Xna.Framework;
-using CombatPOC.Managers;
 using System;
-using System.Diagnostics;
 using CombatPOC.Logic.Paths;
-using CombatPOC.UI;
 
 namespace CombatPOC.Logic;
 

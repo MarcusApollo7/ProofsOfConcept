@@ -1,6 +1,5 @@
 using System;
 using CombatPOC.Entities;
-using CombatPOC.Interfaces;
 
 namespace CombatPOC.Logic;
 

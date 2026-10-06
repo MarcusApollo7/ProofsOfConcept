@@ -1,10 +1,5 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using CombatPOC.Entities;
-using CombatPOC.Interfaces;
-using CombatPOC.Logic;
-using CombatPOC.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +13,6 @@ public class AnimationManager
     private Queue<(IAnimatable, Act)> _animationQueue = new();
     public void AddToAnimationQueue(IAnimatable animatable, Act act)
     {
-        Debug.WriteLine("Adding Animation");
         _animationQueue.Enqueue((animatable, act));
     }
     public bool Update(GameTime gameTime)

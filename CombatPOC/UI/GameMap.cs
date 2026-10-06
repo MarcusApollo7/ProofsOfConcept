@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using CombatPOC.Interfaces;
 using CombatPOC.Logic;
-using CombatPOC.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using POCLibrary.Graphics;
@@ -14,6 +12,7 @@ public class GameMap
     private string TileMapString {get; }
     public Tilemap TileMap {get; set; }
     private Tile[] _tiles;
+    public List<Tile> Tiles {get => [.. _tiles]; set => _tiles = [.. value]; }
     public int MapWidth {get => TileMap.Columns; }
     public int MapHeight {get => TileMap.Rows; }
     public GameMap(string tileMapString)
@@ -47,6 +46,16 @@ public class GameMap
         foreach(Tile tile in _tiles)
         {
             tile.Draw(spriteBatch);
+        }
+    }
+    public void SetScale(Vector2 scale)
+    {
+        TileMap.Scale = scale;
+        float tileWidth = TileMap.TileWidth;
+        float tileHeight = TileMap.TileHeight;
+        foreach(Tile tile in _tiles)
+        {
+            tile.ScreenPosition = new(tileWidth * tile.TileLocation.X, tileHeight * tile.TileLocation.Y);
         }
     }
 }
